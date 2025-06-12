@@ -100,6 +100,10 @@ const phoneNumbers = [
     { name: "Springer Frimo 4", number: "5122" },
     { name: "Springer Kiefel", number: "5216" },
     { name: "Springer Q6", number: "4064" },
+    { name: "Springer U10_1", number: "4601" },
+    { name: "Springer U10_2", number: "4602" },
+    { name: "Springer U1x Endmontage", number: "5586" },
+    { name: "Springer U1x Vormontage", number: "5583" },
     { name: "Tereschenko Alex", number: "5560" },
     { name: "Todt Herbert", number: "5335" },
     { name: "Trübswetter Stefan", number: "4906" },
@@ -125,6 +129,8 @@ const phoneNumbers = [
 const DIAL_PREFIX = "0840277";
 
 let currentFullPhoneNumber = '';
+let checklistItems = JSON.parse(localStorage.getItem('checklistItems')) || [];
+let noteItems = JSON.parse(localStorage.getItem('noteItems')) || [];
 
 function checkMax(input) {
   if (parseInt(input.value) > 14) input.value = 14;
@@ -165,6 +171,10 @@ function loadInputs() {
 
   const lastView = localStorage.getItem('activeView') || 'calculator';
   showView(lastView);
+
+  renderChecklist();
+  renderNotes();
+  scheduleNotifications(); // Benachrichtigungen beim Laden planen
 }
 
 function berechneDifferenz(idOben, idPosOben, idUnten, idPosUnten, idErgebnis, idZusatz) {
@@ -270,16 +280,22 @@ function renderPhoneList(filter = '') {
 function showView(view) {
     const calculatorView = document.getElementById('calculatorView');
     const phoneListView = document.getElementById('phoneListView');
+    const notesChecklistView = document.getElementById('notesChecklistView'); // Neuer View
+
+    calculatorView.style.display = 'none';
+    phoneListView.style.display = 'none';
+    notesChecklistView.style.display = 'none'; // Neuen View ausblenden
 
     if (view === 'calculator') {
         calculatorView.style.display = 'block';
-        phoneListView.style.display = 'none';
     } else if (view === 'phoneList') {
-        calculatorView.style.display = 'none';
         phoneListView.style.display = 'block';
         document.getElementById('phoneListAllNumbers').style.display = 'none';
         document.getElementById('phoneSearch').value = '';
         document.getElementById('phoneListSearchResults').innerHTML = '';
+    } else if (view === 'notesChecklist') { // Neuer View
+        notesChecklistView.style.display = 'block';
+        showTab('checklist'); // Standardmäßig Checkliste anzeigen
     }
     localStorage.setItem('activeView', view);
 }
@@ -287,10 +303,10 @@ function showView(view) {
 function openDialog(name, number) {
     const dialog = document.getElementById('phoneNumberDialog');
     document.getElementById('dialogContactName').textContent = name;
-    
+
     const fullNumber = DIAL_PREFIX + number;
     document.getElementById('dialogContactNumber').textContent = fullNumber;
-    
+
     currentFullPhoneNumber = fullNumber;
     dialog.style.display = 'flex';
 }
@@ -334,9 +350,240 @@ function toggleAllContacts() {
     }
 }
 
+// --- NEUE FUNKTIONEN FÜR NOTIZEN UND CHECKLISTEN ---
+
+function showTab(tabId) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(button => button.classList.remove('active'));
+
+    document.getElementById(tabId + 'Tab').classList.add('active');
+    document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
+}
+
+function addChecklistItem() {
+    const input = document.getElementById('checklistInput');
+    const timeInput = document.getElementById('checklistTime');
+    const photoInput = document.getElementById('checklistPhotoInput');
+    const text = input.value.trim();
+    const time = timeInput.value;
+    const photoFile = photoInput.files[0];
+
+    if (text === '') {
+        alert('Bitte geben Sie einen Text für den Checklistenpunkt ein.');
+        return;
+    }
+
+    const newItem = {
+        id: Date.now(),
+        text: text,
+        checked: false,
+        time: time,
+        photo: null // Wird später als Base64-String gespeichert
+    };
+
+    if (photoFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            newItem.photo = e.target.result;
+            checklistItems.push(newItem);
+            saveChecklist();
+            renderChecklist();
+            scheduleNotificationForChecklistItem(newItem);
+            input.value = '';
+            timeInput.value = '';
+            photoInput.value = ''; // Dateiauswahl zurücksetzen
+        };
+        reader.readAsDataURL(photoFile);
+    } else {
+        checklistItems.push(newItem);
+        saveChecklist();
+        renderChecklist();
+        scheduleNotificationForChecklistItem(newItem);
+        input.value = '';
+        timeInput.value = '';
+        photoInput.value = '';
+    }
+}
+
+function addNoteItem() {
+    const input = document.getElementById('noteInput');
+    const photoInput = document.getElementById('notePhotoInput');
+    const text = input.value.trim();
+    const photoFile = photoInput.files[0];
+
+    if (text === '') {
+        alert('Bitte geben Sie einen Text für die Notiz ein.');
+        return;
+    }
+
+    const newItem = {
+        id: Date.now(),
+        text: text,
+        photo: null
+    };
+
+    if (photoFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            newItem.photo = e.target.result;
+            noteItems.push(newItem);
+            saveNotes();
+            renderNotes();
+            input.value = '';
+            photoInput.value = '';
+        };
+        reader.readAsDataURL(photoFile);
+    } else {
+        noteItems.push(newItem);
+        saveNotes();
+        renderNotes();
+        input.value = '';
+        photoInput.value = '';
+    }
+}
+
+function saveChecklist() {
+    localStorage.setItem('checklistItems', JSON.stringify(checklistItems));
+}
+
+function saveNotes() {
+    localStorage.setItem('noteItems', JSON.stringify(noteItems));
+}
+
+function renderChecklist() {
+    const checklistDiv = document.getElementById('checklistItems');
+    checklistDiv.innerHTML = '';
+    checklistItems.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('checklist-item');
+        if (item.checked) {
+            div.style.textDecoration = 'line-through';
+            div.style.opacity = '0.7';
+        }
+        div.innerHTML = `
+            <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleChecklistItem(${item.id})">
+            <span>${item.text}</span>
+            ${item.time ? `<span class="timestamp">${item.time} Uhr</span>` : ''}
+            <div class="item-actions">
+                ${item.photo ? `<button class="view-photo" onclick="openImageDialog('${item.photo}')">Foto ansehen</button>` : ''}
+                <button onclick="deleteChecklistItem(${item.id})">Löschen</button>
+            </div>
+        `;
+        checklistDiv.appendChild(div);
+    });
+}
+
+function renderNotes() {
+    const notesDiv = document.getElementById('noteItems');
+    notesDiv.innerHTML = '';
+    noteItems.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('note-item');
+        div.innerHTML = `
+            <span>${item.text}</span>
+            <div class="item-actions">
+                ${item.photo ? `<button class="view-photo" onclick="openImageDialog('${item.photo}')">Foto ansehen</button>` : ''}
+                <button onclick="deleteNoteItem(${item.id})">Löschen</button>
+            </div>
+        `;
+        notesDiv.appendChild(div);
+    });
+}
+
+function toggleChecklistItem(id) {
+    const item = checklistItems.find(item => item.id === id);
+    if (item) {
+        item.checked = !item.checked;
+        saveChecklist();
+        renderChecklist();
+    }
+}
+
+function deleteChecklistItem(id) {
+    if (confirm('Möchten Sie diesen Checklistenpunkt wirklich löschen?')) {
+        checklistItems = checklistItems.filter(item => item.id !== id);
+        saveChecklist();
+        renderChecklist();
+    }
+}
+
+function deleteNoteItem(id) {
+    if (confirm('Möchten Sie diese Notiz wirklich löschen?')) {
+        noteItems = noteItems.filter(item => item.id !== id);
+        saveNotes();
+        renderNotes();
+    }
+}
+
+function openImageDialog(imageData) {
+    const dialog = document.getElementById('imageDialog');
+    const img = document.getElementById('dialogImage');
+    img.src = imageData;
+    dialog.style.display = 'flex';
+}
+
+function closeImageDialog() {
+    document.getElementById('imageDialog').style.display = 'none';
+    document.getElementById('dialogImage').src = ''; // Bild zurücksetzen
+}
+
+// Benachrichtigungslogik
+function scheduleNotificationForChecklistItem(item) {
+    if (!item.checked && item.time) {
+        const [hours, minutes] = item.time.split(':').map(Number);
+        const now = new Date();
+        const notificationTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0);
+
+        // Wenn die Zeit heute schon vorbei ist, für morgen planen
+        if (notificationTime.getTime() <= now.getTime()) {
+            notificationTime.setDate(notificationTime.getDate() + 1);
+        }
+
+        const delay = notificationTime.getTime() - now.getTime();
+
+        if (delay > 0) {
+            setTimeout(() => {
+                // Überprüfen, ob das Element noch existiert und nicht als erledigt markiert ist
+                const currentItem = checklistItems.find(i => i.id === item.id);
+                if (currentItem && !currentItem.checked) {
+                    if (Notification.permission === 'granted') {
+                        new Notification('Erinnerung: Checklistenpunkt', {
+                            body: `"${currentItem.text}" ist noch nicht erledigt!`,
+                            icon: 'ios/192.png'
+                        });
+                    }
+                }
+            }, delay);
+        }
+    }
+}
+
+function scheduleNotifications() {
+    checklistItems.forEach(item => {
+        scheduleNotificationForChecklistItem(item);
+    });
+}
+
+
+// Event Listener
 window.onload = () => {
   loadInputs();
   document.getElementById('backgroundColorPicker').addEventListener('input', handleColorChange);
   document.getElementById('phoneSearch').addEventListener('input', (e) => renderPhoneList(e.target.value));
   document.getElementById('toggleAllContactsHeading').addEventListener('click', toggleAllContacts);
+
+  // Initialisiere die Notizen/Checklisten-Ansicht
+  document.getElementById('checklistInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      addChecklistItem();
+    }
+  });
+  document.getElementById('noteInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      addNoteItem();
+    }
+  });
 };

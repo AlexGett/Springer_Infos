@@ -1,4 +1,4 @@
-body {
+Body {
   font-family: Arial, sans-serif;
   margin: 20px;
   padding: 0;
@@ -222,12 +222,12 @@ input[type="number"] {
   align-items: center;
   margin-left: 5px;
 }
-  
+
 body.light-mode {
   background-color: #fff;
   color: #000;
 }
-  
+
 body.light-mode h2,
 body.light-mode label {
   color: #000;
@@ -472,4 +472,198 @@ body.light-mode .dialog-content {
 }
 body.light-mode .dialog-close-btn:hover {
     color: #000;
+}
+
+/* NEUE STYLES FÜR NOTIZEN UND CHECKLISTEN */
+.notes-checklist-container {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background-color: #222;
+  display: none; /* Standardmäßig ausgeblendet */
+}
+
+body.light-mode .notes-checklist-container {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+.notes-checklist-container h2,
+.notes-checklist-container h3 {
+  color: #fff;
+}
+
+body.light-mode .notes-checklist-container h2,
+body.light-mode .notes-checklist-container h3 {
+  color: #000;
+}
+
+.tab-buttons {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.tab-button {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 1em;
+  margin-right: 5px;
+  border-radius: 5px 5px 0 0;
+  transition: background-color 0.3s ease;
+}
+
+.tab-button.active {
+  background-color: #007bff; /* Aktiver Tab-Farbe */
+}
+
+body.light-mode .tab-button.active {
+  background-color: #0056b3;
+}
+
+.tab-button:hover {
+  background-color: #777;
+}
+
+body.light-mode .tab-button:hover {
+  background-color: #ccc;
+}
+
+.tab-content {
+  display: none;
+  padding-top: 10px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.add-item-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.add-item-container input[type="text"],
+.add-item-container textarea {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  background-color: #444;
+  color: #eee;
+  box-sizing: border-box;
+}
+
+body.light-mode .add-item-container input[type="text"],
+body.light-mode .add-item-container textarea {
+  background-color: #fff;
+  color: #000;
+  border-color: #aaa;
+}
+
+.add-item-container textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.add-item-container button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-item-container button:hover {
+  background-color: #218838;
+}
+
+.checklist-item, .note-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #555;
+  color: #eee;
+}
+
+body.light-mode .checklist-item, body.light-mode .note-item {
+  border-bottom: 1px dashed #ccc;
+  color: #000;
+}
+
+.checklist-item:last-child, .note-item:last-child {
+  border-bottom: none;
+}
+
+.checklist-item input[type="checkbox"] {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.checklist-item span, .note-item span {
+  flex-grow: 1;
+  word-break: break-word; /* Lange Wörter umbrechen */
+}
+
+.checklist-item .timestamp, .note-item .timestamp {
+  font-size: 0.8em;
+  color: #aaa;
+  margin-left: 10px;
+}
+
+.checklist-item .item-actions, .note-item .item-actions {
+  display: flex;
+  gap: 5px;
+  margin-left: 10px;
+}
+
+.item-actions button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+.item-actions button.view-photo {
+  background-color: #17a2b8;
+}
+
+.item-actions button:hover {
+  opacity: 0.9;
+}
+
+/* Photo Dialog */
+.dialog-content-image {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    max-width: 90%;
+    max-height: 90%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.light-mode .dialog-content-image {
+    background-color: #fff;
+}
+
+.dialog-content-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
 }

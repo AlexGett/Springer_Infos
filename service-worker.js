@@ -1,18 +1,20 @@
-const CACHE_NAME = 'behälter-rechner-v2';
+const CACHE_NAME = 'behälter-rechner-v3';
 const urlsToCache = [
   './',
   './index.html',
   './style.css',
   './script.js',
   './manifest.json',
-  './icons/icon-72x72.png',
-  './icons/icon-96x96.png',
-  './icons/icon-128x128.png',
-  './icons/icon-144x144.png',
-  './icons/icon-152x152.png',
-  './icons/icon-192x192.png',
-  './icons/icon-384x384.png',
-  './icons/icon-512x512.png',
+  './ios/16.png',
+  './ios/32.png',
+  './ios/60.png',
+  './ios/76.png',
+  './ios/120.png',
+  './ios/152.png',
+  './ios/167.png',
+  './ios/180.png',
+  './ios/192.png',
+  './ios/512.png',
   'https://images.seeklogo.com/logo-png/54/2/motherson-logo-png_seeklogo-544537.png'
 ];
 
