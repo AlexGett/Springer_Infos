@@ -280,22 +280,36 @@ function renderPhoneList(filter = '') {
 function showView(view) {
     const calculatorView = document.getElementById('calculatorView');
     const phoneListView = document.getElementById('phoneListView');
-    const notesChecklistView = document.getElementById('notesChecklistView'); // Neuer View
+    const notesChecklistView = document.getElementById('notesChecklistView');
+    
+    const navCalcButton = document.getElementById('navCalcButton');
+    const navPhoneButton = document.getElementById('navPhoneButton');
+    const navNotesButton = document.getElementById('navNotesButton');
 
+    // Alle Views ausblenden
     calculatorView.style.display = 'none';
     phoneListView.style.display = 'none';
-    notesChecklistView.style.display = 'none'; // Neuen View ausblenden
+    notesChecklistView.style.display = 'none';
 
+    // Alle Navigationsbuttons anzeigen
+    navCalcButton.style.display = 'block';
+    navPhoneButton.style.display = 'block';
+    navNotesButton.style.display = 'block';
+
+    // Gewünschten View anzeigen und entsprechenden Button ausblenden
     if (view === 'calculator') {
         calculatorView.style.display = 'block';
+        navCalcButton.style.display = 'none';
     } else if (view === 'phoneList') {
         phoneListView.style.display = 'block';
         document.getElementById('phoneListAllNumbers').style.display = 'none';
         document.getElementById('phoneSearch').value = '';
         document.getElementById('phoneListSearchResults').innerHTML = '';
-    } else if (view === 'notesChecklist') { // Neuer View
+        navPhoneButton.style.display = 'none';
+    } else if (view === 'notesChecklist') {
         notesChecklistView.style.display = 'block';
         showTab('checklist'); // Standardmäßig Checkliste anzeigen
+        navNotesButton.style.display = 'none';
     }
     localStorage.setItem('activeView', view);
 }

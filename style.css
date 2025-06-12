@@ -361,28 +361,33 @@ body.light-mode .phone-list-container h3 {
   gap: 20px;
 }
 
+/* Stil für normale Navigationsbuttons */
 .nav-button {
-  -webkit-appearance: none;
-  appearance: none;
-  position: relative;
-  border-width: 0;
-  padding: 0 8px 12px;
-  min-width: 8em;
-  box-sizing: border-box;
-  background: transparent;
-  font: inherit;
+  background-color: #007bff; /* Blau als Beispiel */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
   cursor: pointer;
-  margin-left: 0;
+  font-size: 1em;
+  min-width: 8em;
+  text-align: center;
+  transition: background-color 0.3s ease;
 }
 
-.nav-button .button-top::after {
-  background-image: radial-gradient(#6495ed, #4169e1);
+.nav-button:hover {
+  background-color: #0056b3; /* Dunkleres Blau beim Hover */
 }
 
-.nav-button .button-bottom {
-  background-color: #366;
+body.light-mode .nav-button {
+  background-color: #6c757d; /* Dunkleres Grau für Light Mode */
 }
 
+body.light-mode .nav-button:hover {
+  background-color: #5a6268; /* Noch dunkleres Grau beim Hover */
+}
+
+/* Dialog */
 .dialog-overlay {
     position: fixed;
     top: 0;
@@ -543,6 +548,7 @@ body.light-mode .tab-button:hover {
 
 .add-item-container {
   display: flex;
+  flex-wrap: wrap; /* Erlaubt Umbruch auf neue Zeile */
   gap: 10px;
   margin-bottom: 20px;
   align-items: center;
@@ -583,6 +589,24 @@ body.light-mode .add-item-container textarea {
 .add-item-container button:hover {
   background-color: #218838;
 }
+
+/* Spezifische Anordnung für Checklist-Buttons */
+#checklistTab .add-item-container {
+    flex-direction: column; /* Elemente untereinander anordnen */
+    align-items: flex-start; /* Links ausrichten */
+}
+
+#checklistTab .add-item-container input,
+#checklistTab .add-item-container textarea,
+#checklistTab .add-item-container button {
+    width: 100%; /* Volle Breite */
+}
+
+/* Foto-Button in neuer Zeile */
+#checklistTab .add-item-container button:last-of-type { /* Dies ist der "Foto" Button */
+    margin-top: 5px; /* Kleiner Abstand zum Hinzufügen-Button */
+}
+
 
 .checklist-item, .note-item {
   display: flex;

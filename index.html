@@ -68,7 +68,7 @@
 
     <div class="result-container">
       <label>Gesamtanzahl: </label><span id="gesamtanzahl">0</span>
-      <button type="button" class="button" onclick="berechneAlle()">
+      <button type="button" class="button" id="calcButton" onclick="berechneAlle()">
         <div class="button-top">Berechnen</div>
         <div class="button-bottom"></div>
         <div class="button-base"></div>
@@ -110,9 +110,9 @@
       <div class="add-item-container">
         <input type="text" id="checklistInput" placeholder="Neuer Checklistenpunkt">
         <input type="time" id="checklistTime">
+        <button onclick="addChecklistItem()">Hinzufügen</button>
         <input type="file" id="checklistPhotoInput" accept="image/*" style="display: none;">
         <button onclick="document.getElementById('checklistPhotoInput').click()">Foto</button>
-        <button onclick="addChecklistItem()">Hinzufügen</button>
       </div>
       <div id="checklistItems">
         </div>
@@ -122,9 +122,9 @@
       <h3>Notizen</h3>
       <div class="add-item-container">
         <textarea id="noteInput" placeholder="Neue Notiz"></textarea>
+        <button onclick="addNoteItem()">Hinzufügen</button>
         <input type="file" id="notePhotoInput" accept="image/*" style="display: none;">
         <button onclick="document.getElementById('notePhotoInput').click()">Foto</button>
-        <button onclick="addNoteItem()">Hinzufügen</button>
       </div>
       <div id="noteItems">
         </div>
@@ -133,21 +133,9 @@
 
 
   <div class="phone-list-buttons">
-    <button type="button" class="nav-button button" onclick="showView('calculator')">
-      <div class="button-top">Stückzahl</div>
-      <div class="button-bottom"></div>
-      <div class="button-base"></div>
-    </button>
-    <button type="button" class="nav-button button" onclick="showView('phoneList')">
-      <div class="button-top">Telefonnummern</div>
-      <div class="button-bottom"></div>
-      <div class="button-base"></div>
-    </button>
-    <button type="button" class="nav-button button" onclick="showView('notesChecklist')">
-      <div class="button-top">Notizen</div>
-      <div class="button-bottom"></div>
-      <div class="button-base"></div>
-    </button>
+    <button type="button" class="nav-button" id="navCalcButton" onclick="showView('calculator')">Stückzahl</button>
+    <button type="button" class="nav-button" id="navPhoneButton" onclick="showView('phoneList')">Telefonnummern</button>
+    <button type="button" class="nav-button" id="navNotesButton" onclick="showView('notesChecklist')">Notizen</button>
   </div>
 
   <div id="phoneNumberDialog" class="dialog-overlay">
