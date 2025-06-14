@@ -9,8 +9,9 @@ Body {
 }
 
 .bild-container {
-  top: 33px;
-  left: 6300px;
+  position: fixed;
+  top: -33px;
+  left: 300px;
   z-index: 1000;
 }
 
