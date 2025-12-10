@@ -1,4 +1,4 @@
-const CACHE_NAME = 'behälter-rechner-v6'; // Version auf v4 erhöht
+const CACHE_NAME = 'behälter-rechner-v7'; // Version auf v4 erhöht
 const urlsToCache = [
 	'./',
 	'./index.html',
