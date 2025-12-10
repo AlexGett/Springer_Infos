@@ -1,4 +1,4 @@
-Const phoneNumbers = [
+const phoneNumbers = [
 	{ name: "Abnahme Flex Line eQ", number: "5596" },
 	{ name: "Achtnicht Daniel", number: "4576" },
 	{ name: "Anthofer Maximilian", number: "5410" }
