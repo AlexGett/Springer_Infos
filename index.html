@@ -1,188 +1,202 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#DeineHintergrundfarbe">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Behälter Teile Rechner</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Rechner">
-    <link rel="apple-touch-icon" href="ios/192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="ios/180.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="ios/192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="ios/32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="ios/16.png">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta name="theme-color" content="#DeineHintergrundfarbe">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>Behälter Teile Rechner</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="manifest" href="manifest.json">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-title" content="Rechner">
+	<link rel="apple-touch-icon" href="ios/192.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="ios/180.png">
+	<link rel="apple-touch-icon" sizes="192x192" href="ios/192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="ios/32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="ios/16.png">
 </head>
+
 <body>
-  <div class="bild-container">
-    <img src="https://images.seeklogo.com/logo-png/54/2/motherson-logo-png_seeklogo-544537.png" alt="Motherson Logo" class="bild-rechts" onclick="toggleColors()">
-  </div>
+	<div class="bild-container">
+		<img src="https://images.seeklogo.com/logo-png/54/2/motherson-logo-png_seeklogo-544537.png" alt="Motherson Logo" class="bild-rechts" onclick="toggleColors()">
+	</div>
 
-  <div id="calculatorView">
-    <div class="marquee-header-container">
-      <span class="marquee-text-bounce">Stückzahl BMW U1x Front</span>
-    </div>
-    <table class="front">
-      <tr><th>Erster Behälter</th><th>Position</th></tr>
-      <tr>
-        <td><input type="number" id="behaelterOben" min="0" onfocus="this.select()" onchange="saveInput(this)"></td>
-        <td><input type="number" id="positionOben" min="0" max="14" value="0" onfocus="this.select()" onchange="checkMax(this); saveInput(this)"></td>
-      </tr>
-      <tr><th>Letzter Behälter</th><th>Position</th></tr>
-      <tr>
-        <td><input type="number" id="behaelterUnten" min="0" onfocus="this.select()" onchange="saveInput(this)"></td>
-        <td><input type="number" id="positionUnten" min="0" max="14" value="0" onfocus="this.select()" onchange="checkMax(this); saveInput(this)"></td>
-      </tr>
-    </table>
-    <div class="result-container">
-      <label>Ergebnis Front: </label><span id="ergebnis">0</span>
-      <input type="number" id="zusatzFront" min="0" onfocus="this.select()" onchange="berechneAlle()">
-      <label class="input-label">U10</label>
-    </div>
+	<div id="calculatorView">
+		<div class="marquee-header-container">
+			<span class="marquee-text-bounce">Stückzahl BMW U1x Front</span>
+		</div>
+		<table class="front">
+			<tr>
+				<th>Erster Behälter</th>
+				<th>Position</th>
+			</tr>
+			<tr>
+				<td><input type="number" id="behaelterOben" min="0" onfocus="this.select()" onchange="saveInput(this)"></td>
+				<td><input type="number" id="positionOben" min="0" max="14" value="0" onfocus="this.select()" onchange="checkMax(this); saveInput(this)"></td>
+			</tr>
+			<tr>
+				<th>Letzter Behälter</th>
+				<th>Position</th>
+			</tr>
+			<tr>
+				<td><input type="number" id="behaelterUnten" min="0" onfocus="this.select()" onchange="saveInput(this)"></td>
+				<td><input type="number" id="positionUnten" min="0" max="14" value="0" onfocus="this.select()" onchange="checkMax(this); saveInput(this)"></td>
+			</tr>
+		</table>
+		<div class="result-container">
+			<label>Ergebnis Front: </label><span id="ergebnis">0</span>
+			<input type="number" id="zusatzFront" min="0" onfocus="this.select()" onchange="berechneAlle()">
+			<label class="input-label">U10</label>
+		</div>
 
-    <div class="marquee-header-container">
-      <span class="marquee-text-bounce">Stückzahl BMW U1x Heck</span>
-    </div>
-    <table class="heck">
-      <tr><th>Erster Behälter</th><th>Position</th></tr>
-      <tr>
-        <td><input type="number" id="behaelterOben2" min="0" onfocus="this.select()" onchange="saveInput(this)"></td>
-        <td><input type="number" id="positionOben2" min="0" max="14" value="0" onfocus="this.select()" onchange="checkMax(this); saveInput(this)"></td>
-      </tr>
-      <tr><th>Letzter Behälter</th><th>Position</th></tr>
-      <tr>
-        <td><input type="number" id="behaelterUnten2" min="0" onfocus="this.select()" onchange="saveInput(this)"></td>
-        <td><input type="number" id="positionUnten2" min="0" max="14" value="0" onfocus="this.select()" onchange="checkMax(this); saveInput(this)"></td>
-      </tr>
-    </table>
-    <div class="result-container">
-      <label>Ergebnis Heck: </label><span id="ergebnis2">0</span>
-      <input type="number" id="zusatzHeck" min="0" onfocus="this.select()" onchange="berechneAlle()">
-      <label class="input-label">U10</label>
-    </div>
+		<div class="marquee-header-container">
+			<span class="marquee-text-bounce">Stückzahl BMW U1x Heck</span>
+		</div>
+		<table class="heck">
+			<tr>
+				<th>Erster Behälter</th>
+				<th>Position</th>
+			</tr>
+			<tr>
+				<td><input type="number" id="behaelterOben2" min="0" onfocus="this.select()" onchange="saveInput(this)"></td>
+				<td><input type="number" id="positionOben2" min="0" max="14" value="0" onfocus="this.select()" onchange="checkMax(this); saveInput(this)"></td>
+			</tr>
+			<tr>
+				<th>Letzter Behälter</th>
+				<th>Position</th>
+			</tr>
+			<tr>
+				<td><input type="number" id="behaelterUnten2" min="0" onfocus="this.select()" onchange="saveInput(this)"></td>
+				<td><input type="number" id="positionUnten2" min="0" max="14" value="0" onfocus="this.select()" onchange="checkMax(this); saveInput(this)"></td>
+			</tr>
+		</table>
+		<div class="result-container">
+			<label>Ergebnis Heck: </label><span id="ergebnis2">0</span>
+			<input type="number" id="zusatzHeck" min="0" onfocus="this.select()" onchange="berechneAlle()">
+			<label class="input-label">U10</label>
+		</div>
 
-    <div class="result-container">
-      <label>Gesamtanzahl: </label><span id="gesamtanzahl">0</span>
-      <button type="button" class="button" id="calcButton" onclick="berechneAlle()">
-        <div class="button-top">Berechnen</div>
-        <div class="button-bottom"></div>
-        <div class="button-base"></div>
-      </button>
-    </div>
+		<div class="result-container">
+			<label>Gesamtanzahl: </label><span id="gesamtanzahl">0</span>
+			<button type="button" class="button" id="calcButton" onclick="berechneAlle()">
+				<div class="button-top">Berechnen</div>
+				<div class="button-bottom"></div>
+				<div class="button-base"></div>
+			</button>
+		</div>
 
-    <div class="nacharbeit-container">
-      <label>Nacharbeit: </label>
-      <div class="nacharbeit-input-wrapper">
-        <input type="number" id="nacharbeit" min="0"
-        onfocus="this.select()"
-        onchange="berechneNacharbeitProzent()">
-        <label style="margin-left: 10px;">Nacharbeit %:</label>
-        <span id="nacharbeitProzent" style="margin-left: 5px;">0%</span>
-      </div>
-    </div>
-  </div>
-  <div id="phoneListView" class="phone-list-container">
-    <h2>Telefonnummern</h2>
-    <input type="text" id="phoneSearch" placeholder="Suche nach Name oder Nummer...">
-    <div id="phoneListSearchResults">
-      </div>
-    <hr style="border-top: 1px solid #555; margin: 20px 0;">
-    <h3 id="toggleAllContactsHeading">Alle Kontakte</h3>
-    <div id="phoneListAllNumbers">
-      </div>
-  </div>
+		<div class="nacharbeit-container">
+			<label>Nacharbeit: </label>
+			<div class="nacharbeit-input-wrapper">
+				<input type="number" id="nacharbeit" min="0" onfocus="this.select()" onchange="berechneNacharbeitProzent()">
+				<label style="margin-left: 10px;">Nacharbeit %:</label>
+				<span id="nacharbeitProzent" style="margin-left: 5px;">0%</span>
+			</div>
+		</div>
+	</div>
+	<div id="phoneListView" class="phone-list-container">
+		<h2>Telefonnummern</h2>
+		<input type="text" id="phoneSearch" placeholder="Suche nach Name oder Nummer...">
+		<div id="phoneListSearchResults">
+		</div>
+		<hr style="border-top: 1px solid #555; margin: 20px 0;">
+		<h3 id="toggleAllContactsHeading">Alle Kontakte</h3>
+		<div id="phoneListAllNumbers">
+		</div>
+	</div>
 
-  <div id="notesChecklistView" class="notes-checklist-container">
-    <h2>Notizen & Checkliste</h2>
+	<div id="notesChecklistView" class="notes-checklist-container">
+		<h2>Notizen & Checkliste</h2>
 
-    <div class="tab-buttons">
-      <button class="tab-button active" onclick="showTab('checklist')">Checkliste</button>
-      <button class="tab-button" onclick="showTab('notes')">Notizen</button>
-    </div>
+		<div class="tab-buttons">
+			<button class="tab-button active" onclick="showTab('checklist')">Checkliste</button>
+			<button class="tab-button" onclick="showTab('notes')">Notizen</button>
+		</div>
 
-    <div id="checklistTab" class="tab-content active">
-      <h3>Checkliste</h3>
-      <div class="add-item-container">
-        <input type="text" id="checklistInput" placeholder="Neuer Checklistenpunkt">
-        <input type="time" id="checklistTime">
-        <button onclick="addChecklistItem()">Hinzufügen</button>
-        <input type="file" id="checklistPhotoInput" accept="image/*" style="display: none;">
-        <button onclick="document.getElementById('checklistPhotoInput').click()">Foto</button>
-      </div>
-      <div id="checklistItems">
-        </div>
-    </div>
+		<div id="checklistTab" class="tab-content active">
+			<h3>Checkliste</h3>
+			<div class="add-item-container">
+				<input type="text" id="checklistInput" placeholder="Neuer Checklistenpunkt">
+				<input type="time" id="checklistTime">
+				<button onclick="addChecklistItem()">Hinzufügen</button>
+				<input type="file" id="checklistPhotoInput" accept="image/*" style="display: none;">
+				<button onclick="document.getElementById('checklistPhotoInput').click()">Foto</button>
+			</div>
+			<div id="checklistItems">
+			</div>
+		</div>
 
-    <div id="notesTab" class="tab-content">
-      <h3>Notizen</h3>
-      <div class="add-item-container">
-        <textarea id="noteInput" placeholder="Neue Notiz"></textarea>
-        <button onclick="addNoteItem()">Hinzufügen</button>
-        <input type="file" id="notePhotoInput" accept="image/*" style="display: none;">
-        <button onclick="document.getElementById('notePhotoInput').click()">Foto</button>
-      </div>
-      <div id="noteItems">
-        </div>
-    </div>
-  </div>
+		<div id="notesTab" class="tab-content">
+			<h3>Notizen</h3>
+			<div class="add-item-container">
+				<textarea id="noteInput" placeholder="Neue Notiz"></textarea>
+				<button onclick="addNoteItem()">Hinzufügen</button>
+				<input type="file" id="notePhotoInput" accept="image/*" style="display: none;">
+				<button onclick="document.getElementById('notePhotoInput').click()">Foto</button>
+			</div>
+			<div id="noteItems">
+			</div>
+		</div>
+	</div>
 
 
-  <div class="phone-list-buttons">
-    <button type="button" class="nav-button" id="navCalcButton" onclick="showView('calculator')">Stückzahl</button>
-    <button type="button" class="nav-button" id="navPhoneButton" onclick="showView('phoneList')">Telefonnummern</button>
-    <button type="button" class="nav-button" id="navNotesButton" onclick="showView('notesChecklist')">Notizen</button>
-  </div>
+	<div class="phone-list-buttons">
+		<button type="button" class="nav-button" id="navCalcButton" onclick="showView('calculator')">Stückzahl</button>
+		<button type="button" class="nav-button" id="navPhoneButton" onclick="showView('phoneList')">Telefonnummern</button>
+		<button type="button" class="nav-button" id="navNotesButton" onclick="showView('notesChecklist')">Notizen</button>
+	</div>
 
-  <div id="phoneNumberDialog" class="dialog-overlay">
-    <div class="dialog-content">
-      <button class="dialog-close-btn" onclick="closeDialog()">&times;</button>
-      <h3 id="dialogContactName"></h3>
-      <p id="dialogContactNumber"></p>
-      <div class="dialog-buttons">
-        <button class="dialog-button copy" onclick="copyNumber()">Nummer kopieren</button>
-        <button class="dialog-button call" onclick="callNumber()">Anrufen</button>
-      </div>
-    </div>
-  </div>
+	<div id="phoneNumberDialog" class="dialog-overlay">
+		<div class="dialog-content">
+			<button class="dialog-close-btn" onclick="closeDialog()">&times;</button>
+			<h3 id="dialogContactName"></h3>
+			<p id="dialogContactNumber"></p>
+			<div class="dialog-buttons">
+				<button class="dialog-button copy" onclick="copyNumber()">Nummer kopieren</button>
+				<button class="dialog-button call" onclick="callNumber()">Anrufen</button>
+			</div>
+		</div>
+	</div>
 
-  <div id="imageDialog" class="dialog-overlay">
-    <div class="dialog-content-image">
-      <button class="dialog-close-btn" onclick="closeImageDialog()">&times;</button>
-      <img id="dialogImage" src="" alt="Full size image">
-    </div>
-  </div>
+	<div id="imageDialog" class="dialog-overlay">
+		<div class="dialog-content-image">
+			<button class="dialog-close-btn" onclick="closeImageDialog()">&times;</button>
+			<img id="dialogImage" src="" alt="Full size image">
+		</div>
+	</div>
 
-  <div class="color-picker-container">
-      <label for="backgroundColorPicker">Hintergrundfarbe ändern:</label>
-      <input type="color" id="backgroundColorPicker" value="#000000">
-  </div>
+	<div class="color-picker-container">
+		<label for="backgroundColorPicker">Hintergrundfarbe ändern:</label>
+		<input type="color" id="backgroundColorPicker" value="#000000">
+		<button type="button" class="reset-button" onclick="resetCalculatorInputs()">Reset</button>
+	</div>
 
-  <script src="script.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, function(err) {
-          console.log('ServiceWorker registration failed: ', err);
-        });
-      });
-    }
-    // Benachrichtigungs-API-Anfrage
-    if ('Notification' in window) {
-      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            console.log('Benachrichtigungsberechtigung erteilt.');
-          }
-        });
-      }
-    }
-  </script>
+	<script src="script.js"></script>
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', function() {
+				navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+					console.log('ServiceWorker registration successful with scope: ', registration.scope);
+				}, function(err) {
+					console.log('ServiceWorker registration failed: ', err);
+				});
+			});
+		}
+		// Benachrichtigungs-API-Anfrage
+		if ('Notification' in window) {
+			if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+				Notification.requestPermission().then(permission => {
+					if (permission === 'granted') {
+						console.log('Benachrichtigungsberechtigung erteilt.');
+					}
+				});
+			}
+		}
+	</script>
 </body>
+
 </html>
