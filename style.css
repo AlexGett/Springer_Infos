@@ -294,13 +294,13 @@ body.light-mode #nacharbeitProzent {
 }
 
 body.light-mode .reset-button {
-	background-color: #f0ad4e;
+	background-color: #dc3545;
 	/* Orange für Light Mode */
 	color: #000;
 }
 
 body.light-mode .reset-button:hover {
-	background-color: #ec971f;
+	background-color: #c82333;
 }
 
 .phone-list-container {
