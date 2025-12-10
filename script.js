@@ -191,7 +191,7 @@ function loadInputs() {
 
 // NEUE FUNKTION: Setzt alle Calculator-Eingaben zurück
 function resetCalculatorInputs() {
-	if (confirm("Möchten Sie wirklich alle Eingaben des Rechners (Behälter, Positionen, Zusatz, Nacharbeit) löschen?")) {
+	if (confirm("Möchten du wirklich alle Eingaben löschen?")) {
 		CALCULATOR_INPUT_IDS.forEach(id => {
 			const inputElement = document.getElementById(id);
 			inputElement.value = ''; // Eingabefeld leeren
@@ -206,7 +206,7 @@ function resetCalculatorInputs() {
 
 		// Erzwungenes Neuladen der Berechnung und Anzeige
 		berechneAlle();
-		alert('Rechnerdaten zurückgesetzt.');
+		alert('Alle Eingaben wurden zurückgesetzt.');
 	}
 }
 
