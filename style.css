@@ -66,7 +66,7 @@ h2 {
 #calculatorView, #phoneListView, #notesView {
 	max-width: 400px;
 	margin: 0 auto;
-	padding: 0 15px 100px;
+	padding: 0 15px 0px;
 }
 
 table {
