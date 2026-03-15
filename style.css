@@ -539,6 +539,7 @@ body.light-mode .tab-button:hover {
 
 .add-item-container textarea {
 	padding: 12px;
+	font-size: 1rem;
 	border: 1px solid var(--border-color);
 	border-radius: 8px;
 	background-color: var(--input-bg);
