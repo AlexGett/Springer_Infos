@@ -15,7 +15,7 @@ const urlsToCache = [
 	'./ios/180.png',
 	'./ios/192.png',
 	'./ios/512.png',
-	'./logo.png'
+	'./logo.PNG'
 ];
 
 // Install Event: Cache statische Assets
