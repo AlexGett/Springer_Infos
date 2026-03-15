@@ -1,4 +1,4 @@
-const CACHE_NAME = 'behälter-rechner-v1.1.7'; // Cache Version aktualisiert
+const CACHE_NAME = 'behälter-rechner-v1.1.8'; // Cache Version aktualisiert
 const urlsToCache = [
 	'./',
 	'./index.html',
