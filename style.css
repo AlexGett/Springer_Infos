@@ -38,8 +38,10 @@ body {
 
 .bild-container {
 	display: flex;
-    justify-content: flex-end;
-    padding: 0px 30px;
+	justify-content: flex-end;
+	align-items: flex-start; /* Zwingt das Bild an die oberste Kante des Containers */
+	padding: 0px 30px;
+	margin-top: -10px; /* Ziehe den Container nach oben. Erhöhe den Wert (z.B. -20px), falls nötig */
 }
 
 .bild-rechts {
