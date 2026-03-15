@@ -151,12 +151,12 @@
 
 	<script src="script.js"></script>
 	<script>
-		if ('serviceWorker' in navigator) {
+		if ('serviceworker' in navigator) {
 			window.addEventListener('load', function() {
-				navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-					console.log('ServiceWorker registration successful with scope: ', registration.scope);
+				navigator.serviceworker.register('/service-worker.js').then(function(registration) {
+					console.log('Serviceworker registration successful with scope: ', registration.scope);
 				}, function(err) {
-					console.log('ServiceWorker registration failed: ', err);
+					console.log('serviceworker registration failed: ', err);
 				});
 			});
 		}
