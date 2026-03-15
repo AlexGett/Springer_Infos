@@ -41,7 +41,7 @@ body {
 	justify-content: flex-end;
 	align-items: flex-start; /* Zwingt das Bild an die oberste Kante des Containers */
 	padding: 0px 30px;
-	margin-top: -10px; /* Ziehe den Container nach oben. Erhöhe den Wert (z.B. -20px), falls nötig */
+	margin-top: 0px; /* Ziehe den Container nach oben. Erhöhe den Wert (z.B. -20px), falls nötig */
 }
 
 .bild-rechts {
