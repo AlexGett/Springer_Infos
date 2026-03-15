@@ -1,4 +1,4 @@
-const CACHE_NAME = 'behälter-rechner-v8'; // Version auf v4 erhöht
+const CACHE_NAME = 'behälter-rechner-v1.1.5'; // Cache Version aktualisiert
 const urlsToCache = [
 	'./',
 	'./index.html',
@@ -15,7 +15,7 @@ const urlsToCache = [
 	'./ios/180.png',
 	'./ios/192.png',
 	'./ios/512.png',
-	'https://images.seeklogo.com/logo-png/54/2/motherson-logo-png_seeklogo-544537.png'
+	'./logo.png'
 ];
 
 // Install Event: Cache statische Assets
