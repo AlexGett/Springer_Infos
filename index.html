@@ -16,6 +16,7 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="ios/180.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="ios/32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="ios/16.png">
+	<script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 
 <body>
@@ -93,30 +94,30 @@
 			</div>
 		</div>
 	</div>
+
 	<div id="phoneListView" class="phone-list-container hidden">
 		<h2>Telefonnummern</h2>
 		<input type="text" id="phoneSearch" placeholder="Suche nach Name oder Nummer...">
-		<div id="phoneListSearchResults">
-		</div>
+		<div id="phoneListSearchResults"></div>
 		<hr class="phone-list-divider">
 		<h3 id="toggleAllContactsHeading">Alle Kontakte</h3>
-		<div id="phoneListAllNumbers">
-		</div>
+		<div id="phoneListAllNumbers"></div>
 	</div>
 
 	<div id="notesView" class="notes-container hidden">
 		<h2>Notizen</h2>
-
 		<div class="add-item-container">
-			<textarea id="noteInput" placeholder="Neue Notiz"></textarea>
-			<button onclick="addNoteItem()">Hinzufügen</button>
-			<input type="file" id="notePhotoInput" accept="image/*" class="hidden">
-			<button class="photo-btn" onclick="document.getElementById('notePhotoInput').click()">📷 Foto anhängen</button>
+			<textarea id="noteInput" placeholder="Neue Notiz..."></textarea>
+			<button class="button" onclick="addNoteItem()">Hinzufügen</button>
+			
+			<div class="action-buttons">
+				<input type="file" id="notePhotoInput" accept="image/*" class="hidden">
+				<button type="button" class="photo-btn" onclick="document.getElementById('notePhotoInput').click()">📷 Foto anhängen</button>
+				<button type="button" class="scan-btn" onclick="openScanner()">🔍 Code Scannen</button>
+			</div>
 		</div>
-		<div id="noteItems">
-		</div>
+		<div id="noteItems"></div>
 	</div>
-
 
 	<div class="phone-list-buttons">
 		<button type="button" class="nav-button" id="navCalcButton" onclick="showView('calculator')">Stückzahl</button>
@@ -143,6 +144,15 @@
 		</div>
 	</div>
 
+	<div id="scannerDialog" class="dialog-overlay" onclick="if(event.target === this) closeScanner()">
+		<div class="dialog-content">
+			<button class="dialog-close-btn" onclick="closeScanner()">&times;</button>
+			<h3>Code Scannen</h3>
+			<div id="reader" style="width: 100%; min-height: 250px;"></div>
+			<p id="scanner-status" style="margin-top: 15px; font-size: 0.9em; color: var(--text-muted);">Kamera wird gestartet...</p>
+		</div>
+	</div>
+
 	<div class="color-picker-container">
 		<label for="backgroundColorPicker">Hintergrundfarbe ändern:</label>
 		<input type="color" id="backgroundColorPicker" value="#000000">
@@ -160,7 +170,6 @@
 				});
 			});
 		}
-		// Benachrichtigungs-API-Anfrage
 		if ('Notification' in window) {
 			if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
 				Notification.requestPermission().then(permission => {
