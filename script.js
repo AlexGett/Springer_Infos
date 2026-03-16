@@ -493,8 +493,8 @@ function openScanner() {
     };
 
     html5QrcodeScanner.start(
-        // Fordere die höchste verfügbare Auflösung und Dauer-Autofokus der Rückkamera an
-        { facingMode: "environment", advanced: [{ focusMode: "continuous" }] },
+        // Fordere die Rückkamera an (Fehlerbehebung: advanced-Objekt entfernt)
+        { facingMode: "environment" },
         config,
         onScanSuccess,
         onScanFailure
