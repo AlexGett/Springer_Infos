@@ -1,4 +1,4 @@
-const CACHE_NAME = 'behälter-rechner-v1.1.19'; // Version für den Scanner erhöht
+const CACHE_NAME = 'behälter-rechner-v1.1.20';
 const urlsToCache = [
 	'./',
 	'./index.html',
@@ -37,8 +37,6 @@ self.addEventListener('fetch', event => {
 			}
 			return fetch(event.request).then(
 				response => {
-					// Wir cachen nur lokale Dateien und gültige Antworten (Status 200).
-                    // Externe CDN-Aufrufe wie unpkg.com für den QR-Code werden normal durchgereicht.
 					if (!response || response.status !== 200 || response.type !== 'basic') {
 						return response;
 					}
