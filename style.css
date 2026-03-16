@@ -62,7 +62,7 @@ h2 {
 	color: var(--text-color);
 }
 
-#calculatorView, #phoneListView, #notesView {
+#calculatorView, #phoneListView, #notesView, #qrGeneratorView {
 	max-width: 400px;
 	margin: 0 auto;
 	padding: 0 15px 0px;
@@ -79,8 +79,7 @@ table {
 	box-shadow: var(--card-shadow);
 }
 
-td,
-th {
+td, th {
 	border: 1px solid var(--border-color);
 	padding: 8px;
 	text-align: center;
@@ -111,10 +110,7 @@ input[type="number"]:focus, input[type="text"]:focus, textarea:focus {
 	border-color: var(--primary-color);
 }
 
-#ergebnis,
-#ergebnis2,
-#gesamtanzahl,
-#nacharbeitProzent {
+#ergebnis, #ergebnis2, #gesamtanzahl, #nacharbeitProzent {
 	font-weight: 800;
 	font-size: 1.3em;
 	color: var(--success-color);
@@ -261,40 +257,45 @@ input[type="number"]:focus, input[type="text"]:focus, textarea:focus {
 	margin: 20px 0 0;
 }
 
-/* Navigation */
+/* Navigation - Angepasst für 4 Buttons */
 .phone-list-buttons {
 	position: fixed;
 	bottom: 25px;
 	left: 50%;
 	transform: translateX(-50%);
 	display: flex;
-	gap: 10px;
-	background-color: rgba(30, 30, 30, 0.8);
+	gap: 6px;
+	background-color: rgba(30, 30, 30, 0.85);
 	backdrop-filter: blur(12px);
 	padding: 8px;
 	border-radius: 50px;
 	box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 	z-index: 1000;
 	border: 1px solid rgba(255,255,255,0.1);
+	width: 90%;
+	max-width: 380px;
+	justify-content: center;
 }
 
 .nav-button {
 	background: transparent;
 	color: var(--text-muted);
 	border: none;
-	padding: 12px 20px;
+	padding: 10px 12px;
 	border-radius: 40px;
 	cursor: pointer;
 	font-weight: 600;
-	font-size: 0.95rem;
+	font-size: 0.85rem;
 	transition: all 0.3s;
+	flex: 1;
+	text-align: center;
 }
 
 .nav-button:hover { color: var(--text-color); background-color: rgba(255,255,255,0.05); }
 .nav-button.active-nav { background-color: var(--primary-color); color: white; }
 
-/* Notizen */
-.notes-container {
+/* Notizen & QR Container */
+.notes-container, .qr-container {
 	margin-top: 20px;
 	padding: 1.25rem;
 	border: 1px solid var(--border-color);
@@ -357,6 +358,18 @@ body.light-mode .note-item { background-color: rgba(0,0,0,0.03); }
 }
 .item-actions button.view-photo { background-color: #17a2b8; }
 
+/* QR Generator Spezifisch */
+.qr-code-display {
+	margin-top: 15px;
+	justify-content: center;
+	align-items: center;
+	background: white; /* QR-Code braucht weißen Hintergrund zum Scannen */
+	padding: 20px;
+	border-radius: 8px;
+	display: none;
+}
+.qr-code-display.show { display: flex; }
+
 /* Dialoge */
 .dialog-overlay {
 	position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
@@ -393,11 +406,5 @@ body.light-mode .dialog-close-btn:hover { color: #000; }
 .dialog-content-image img { max-width: 100vw; max-height: 80vh; border-radius: 8px; }
 
 /* QR Scanner Anpassungen */
-#reader {
-    background: #000;
-    border-radius: 8px;
-    overflow: hidden;
-}
-#reader video {
-    object-fit: cover;
-}
+#reader { background: #000; border-radius: 8px; overflow: hidden; }
+#reader video { object-fit: cover; }
