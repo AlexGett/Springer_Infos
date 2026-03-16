@@ -162,7 +162,12 @@
 		<div class="dialog-content">
 			<button class="dialog-close-btn" onclick="closeScanner()">&times;</button>
 			<h3>Code Scannen</h3>
-			<div id="reader" style="width: 100%; min-height: 250px;"></div>
+			<div id="reader" style="width: 100%; min-height: 200px;"></div>
+			
+			<button id="torchButton" class="torch-btn" onclick="toggleFlashlight()" style="display: none;">
+				🔦 Taschenlampe An
+			</button>
+
 			<p id="scanner-status" style="margin-top: 15px; font-size: 0.9em; color: var(--text-muted);">Kamera wird gestartet...</p>
 		</div>
 	</div>
@@ -183,15 +188,6 @@
 					console.log('ServiceWorker registration failed: ', err);
 				});
 			});
-		}
-		if ('Notification' in window) {
-			if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-				Notification.requestPermission().then(permission => {
-					if (permission === 'granted') {
-						console.log('Benachrichtigungsberechtigung erteilt.');
-					}
-				});
-			}
 		}
 	</script>
 </body>
