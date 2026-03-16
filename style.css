@@ -408,3 +408,19 @@ body.light-mode .dialog-close-btn:hover { color: #000; }
 /* QR Scanner Anpassungen */
 #reader { background: #000; border-radius: 8px; overflow: hidden; }
 #reader video { object-fit: cover; }
+
+.torch-btn {
+	margin-top: 15px;
+	width: 100%;
+	background-color: #ffc107;
+	color: #000;
+	border: none;
+	padding: 12px;
+	border-radius: 6px;
+	font-weight: bold;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+.torch-btn:active {
+	background-color: #e0a800;
+}
