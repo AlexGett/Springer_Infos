@@ -302,13 +302,15 @@ function renderPhoneList(filter = '') {
 }
 
 function showView(view) {
-	const views = ['calculatorView', 'phoneListView', 'notesView'];
+	// Erweitert für qrGeneratorView
+	const views = ['calculatorView', 'phoneListView', 'notesView', 'qrGeneratorView'];
 	views.forEach(id => {
 		const el = document.getElementById(id);
 		if (el) el.classList.add('hidden');
 	});
 
-	const navButtons = ['navCalcButton', 'navPhoneButton', 'navNotesButton'];
+	// Erweitert für navQRButton
+	const navButtons = ['navCalcButton', 'navPhoneButton', 'navNotesButton', 'navQRButton'];
 	navButtons.forEach(id => {
 		const el = document.getElementById(id);
 		if (el) el.classList.remove('active-nav');
@@ -323,6 +325,9 @@ function showView(view) {
 	} else if (view === 'notes') {
 		document.getElementById('notesView').classList.remove('hidden');
 		document.getElementById('navNotesButton').classList.add('active-nav');
+	} else if (view === 'qrGenerator') {
+		document.getElementById('qrGeneratorView').classList.remove('hidden');
+		document.getElementById('navQRButton').classList.add('active-nav');
 	}
 
 	localStorage.setItem('activeView', view);
@@ -420,14 +425,12 @@ function renderNotes() {
 	const notesDiv = document.getElementById('noteItems');
 	notesDiv.innerHTML = '';
 	
-	// Neueste Notizen zuerst anzeigen
 	const sortedItems = [...noteItems].reverse();
 	
 	sortedItems.forEach(item => {
 		const div = document.createElement('div');
 		div.classList.add('note-item');
 		
-		// Text mit Zeilenumbrüchen formatieren
 		const formattedText = item.text.replace(/\n/g, '<br>');
 		
 		div.innerHTML = `
@@ -462,7 +465,7 @@ function closeImageDialog() {
 }
 
 
-/* --- NEU: QR & Barcode Scanner Logik --- */
+/* --- QR Scanner Logik --- */
 let html5QrcodeScanner = null;
 
 function openScanner() {
@@ -470,7 +473,6 @@ function openScanner() {
     dialog.classList.add('show');
     document.getElementById('scanner-status').textContent = "Kamera wird gestartet...";
 
-    // Falls schon eine Instanz läuft, stoppen wir diese zuerst sicherheitshalber
     if (html5QrcodeScanner) {
         html5QrcodeScanner.clear();
     }
@@ -484,7 +486,7 @@ function openScanner() {
     };
 
     html5QrcodeScanner.start(
-        { facingMode: "environment" }, // Verwendet die Rückkamera
+        { facingMode: "environment" },
         config,
         onScanSuccess,
         onScanFailure
@@ -498,7 +500,6 @@ function closeScanner() {
     const dialog = document.getElementById('scannerDialog');
     dialog.classList.remove('show');
     
-    // Kamera ausschalten, wenn der Dialog geschlossen wird, um Akku zu sparen
     if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
         html5QrcodeScanner.stop().then(() => {
             html5QrcodeScanner.clear();
@@ -509,7 +510,6 @@ function closeScanner() {
 }
 
 function onScanSuccess(decodedText, decodedResult) {
-    // Wenn gescannt wurde: Trage es ins Notiz-Feld ein
     const noteInput = document.getElementById('noteInput');
     
     if (noteInput.value.trim() !== '') {
@@ -518,15 +518,38 @@ function onScanSuccess(decodedText, decodedResult) {
         noteInput.value = '[Gescannt]: ' + decodedText;
     }
     
-    // Scanner direkt schließen
     closeScanner();
-    
-    // Kleines visuelles Feedback
-    document.getElementById('navNotesButton').classList.add('active-nav'); // Tab sicherstellen
+    document.getElementById('navNotesButton').classList.add('active-nav');
 }
 
 function onScanFailure(error) {
-    // Wird dauernd gefeuert, wenn kein Code im Bild ist. Daher hier nichts machen.
+    // Wird gefeuert, wenn kein Code im Bild ist.
+}
+
+
+/* --- NEU: QR Generator Logik --- */
+function generateQRCode() {
+    const text = document.getElementById('qrGenerateInput').value.trim();
+    const qrDisplay = document.getElementById('qrcodeDisplay');
+    
+    if (text === "") {
+        alert("Bitte gib einen Text oder eine Sachnummer ein, um einen QR-Code zu erstellen.");
+        return;
+    }
+
+    // Leere den Container
+    qrDisplay.innerHTML = "";
+    qrDisplay.classList.add('show');
+
+    // Generiere den neuen Code (qrcode.min.js)
+    new QRCode(qrDisplay, {
+        text: text,
+        width: 200,
+        height: 200,
+        colorDark : "#000000",
+        colorLight : "#ffffff", // Wichtig, damit er von Scannern auf dunklen Displays erkannt wird
+        correctLevel : QRCode.CorrectLevel.H
+    });
 }
 
 // Event Listener
