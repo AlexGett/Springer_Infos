@@ -131,13 +131,11 @@ const DIAL_PREFIX = "0840277";
 let currentFullPhoneNumber = '';
 let noteItems = JSON.parse(localStorage.getItem('noteItems')) || [];
 
-// Liste aller IDs der Calculator-Eingabefelder, die resettet werden sollen
 const CALCULATOR_INPUT_IDS = [
 	'behaelterOben', 'positionOben', 'behaelterUnten', 'positionUnten',
 	'behaelterOben2', 'positionOben2', 'behaelterUnten2', 'positionUnten2',
 	'nacharbeit', 'zusatzFront', 'zusatzHeck'
 ];
-
 
 function checkMax(input) {
 	if (parseInt(input.value) > 14) input.value = 14;
@@ -156,7 +154,6 @@ function loadInputs() {
 		if (saved !== null) {
 			inputElement.value = saved;
 		} else {
-			// Setzt Standardwerte für Positionsfelder, wenn nichts gespeichert ist
 			if (id.startsWith('position')) {
 				inputElement.value = 0;
 			} else {
@@ -187,27 +184,23 @@ function loadInputs() {
 	renderNotes();
 }
 
-// NEUE FUNKTION: Setzt alle Calculator-Eingaben zurück
 function resetCalculatorInputs() {
 	if (confirm("Möchten du wirklich alle Eingaben löschen?")) {
 		CALCULATOR_INPUT_IDS.forEach(id => {
 			const inputElement = document.getElementById(id);
-			inputElement.value = ''; // Eingabefeld leeren
-			localStorage.removeItem(id); // Eintrag aus dem localStorage entfernen
+			inputElement.value = '';
+			localStorage.removeItem(id);
 		});
 
-		// Setze die Positionsfelder explizit auf 0 (wie in HTML definiert)
 		document.getElementById('positionOben').value = 0;
 		document.getElementById('positionUnten').value = 0;
 		document.getElementById('positionOben2').value = 0;
 		document.getElementById('positionUnten2').value = 0;
 
-		// Erzwungenes Neuladen der Berechnung und Anzeige
 		berechneAlle();
 		alert('Alle Eingaben wurden zurückgesetzt.');
 	}
 }
-
 
 function berechneDifferenz(idOben, idPosOben, idUnten, idPosUnten, idErgebnis, idZusatz) {
 	let behOben = parseInt(document.getElementById(idOben).value) || 0;
@@ -308,23 +301,19 @@ function renderPhoneList(filter = '') {
 	}
 }
 
-
 function showView(view) {
-	// Views ausblenden
 	const views = ['calculatorView', 'phoneListView', 'notesView'];
 	views.forEach(id => {
 		const el = document.getElementById(id);
 		if (el) el.classList.add('hidden');
 	});
 
-	// Buttons zurücksetzen
 	const navButtons = ['navCalcButton', 'navPhoneButton', 'navNotesButton'];
 	navButtons.forEach(id => {
 		const el = document.getElementById(id);
 		if (el) el.classList.remove('active-nav');
 	});
 
-	// Aktive View und Button setzen
 	if (view === 'calculator') {
 		document.getElementById('calculatorView').classList.remove('hidden');
 		document.getElementById('navCalcButton').classList.add('active-nav');
@@ -342,10 +331,8 @@ function showView(view) {
 function openDialog(name, number) {
 	const dialog = document.getElementById('phoneNumberDialog');
 	document.getElementById('dialogContactName').textContent = name;
-
 	const fullNumber = DIAL_PREFIX + number;
 	document.getElementById('dialogContactNumber').textContent = fullNumber;
-
 	currentFullPhoneNumber = fullNumber;
 	dialog.classList.add('show');
 }
@@ -373,7 +360,6 @@ function callNumber() {
 	}
 }
 
-// Function to toggle visibility of 'Alle Kontakte'
 function toggleAllContacts() {
 	const allNumbersDiv = document.getElementById('phoneListAllNumbers');
 	const phoneSearchInput = document.getElementById('phoneSearch');
@@ -388,8 +374,6 @@ function toggleAllContacts() {
 		allNumbersDiv.classList.add('hidden');
 	}
 }
-
-// --- NEUE FUNKTIONEN FÜR NOTIZEN UND CHECKLISTEN ---
 
 function addNoteItem() {
 	const input = document.getElementById('noteInput');
@@ -435,11 +419,19 @@ function saveNotes() {
 function renderNotes() {
 	const notesDiv = document.getElementById('noteItems');
 	notesDiv.innerHTML = '';
-	noteItems.forEach(item => {
+	
+	// Neueste Notizen zuerst anzeigen
+	const sortedItems = [...noteItems].reverse();
+	
+	sortedItems.forEach(item => {
 		const div = document.createElement('div');
 		div.classList.add('note-item');
+		
+		// Text mit Zeilenumbrüchen formatieren
+		const formattedText = item.text.replace(/\n/g, '<br>');
+		
 		div.innerHTML = `
-            <span>${item.text}</span>
+            <span>${formattedText}</span>
             <div class="item-actions">
                 ${item.photo ? `<button class="view-photo" onclick="openImageDialog('${item.photo}')">Foto ansehen</button>` : ''}
                 <button onclick="deleteNoteItem(${item.id})">Löschen</button>
@@ -466,7 +458,75 @@ function openImageDialog(imageData) {
 
 function closeImageDialog() {
 	document.getElementById('imageDialog').classList.remove('show');
-	setTimeout(() => { document.getElementById('dialogImage').src = ''; }, 200); // Verzögerung für Animation
+	setTimeout(() => { document.getElementById('dialogImage').src = ''; }, 200);
+}
+
+
+/* --- NEU: QR & Barcode Scanner Logik --- */
+let html5QrcodeScanner = null;
+
+function openScanner() {
+    const dialog = document.getElementById('scannerDialog');
+    dialog.classList.add('show');
+    document.getElementById('scanner-status').textContent = "Kamera wird gestartet...";
+
+    // Falls schon eine Instanz läuft, stoppen wir diese zuerst sicherheitshalber
+    if (html5QrcodeScanner) {
+        html5QrcodeScanner.clear();
+    }
+
+    html5QrcodeScanner = new Html5Qrcode("reader");
+
+    const config = { 
+        fps: 10, 
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0 
+    };
+
+    html5QrcodeScanner.start(
+        { facingMode: "environment" }, // Verwendet die Rückkamera
+        config,
+        onScanSuccess,
+        onScanFailure
+    ).catch((err) => {
+        document.getElementById('scanner-status').textContent = "Fehler beim Kamerazugriff. Evtl. keine Berechtigung?";
+        console.error("Camera error:", err);
+    });
+}
+
+function closeScanner() {
+    const dialog = document.getElementById('scannerDialog');
+    dialog.classList.remove('show');
+    
+    // Kamera ausschalten, wenn der Dialog geschlossen wird, um Akku zu sparen
+    if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
+        html5QrcodeScanner.stop().then(() => {
+            html5QrcodeScanner.clear();
+        }).catch(err => {
+            console.error("Fehler beim Stoppen des Scanners", err);
+        });
+    }
+}
+
+function onScanSuccess(decodedText, decodedResult) {
+    // Wenn gescannt wurde: Trage es ins Notiz-Feld ein
+    const noteInput = document.getElementById('noteInput');
+    
+    if (noteInput.value.trim() !== '') {
+        noteInput.value += '\n[Gescannt]: ' + decodedText;
+    } else {
+        noteInput.value = '[Gescannt]: ' + decodedText;
+    }
+    
+    // Scanner direkt schließen
+    closeScanner();
+    
+    // Kleines visuelles Feedback
+    document.getElementById('navNotesButton').classList.add('active-nav'); // Tab sicherstellen
+}
+
+function onScanFailure(error) {
+    // Wird dauernd gefeuert, wenn kein Code im Bild ist. Daher hier nichts machen.
 }
 
 // Event Listener
@@ -475,10 +535,4 @@ window.onload = () => {
 	document.getElementById('backgroundColorPicker').addEventListener('input', handleColorChange);
 	document.getElementById('phoneSearch').addEventListener('input', (e) => renderPhoneList(e.target.value));
 	document.getElementById('toggleAllContactsHeading').addEventListener('click', toggleAllContacts);
-
-	document.getElementById('noteInput').addEventListener('keypress', function(event) {
-		if (event.key === 'Enter') {
-			addNoteItem();
-		}
-	});
 };
