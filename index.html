@@ -17,6 +17,7 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="ios/32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="ios/16.png">
 	<script src="https://unpkg.com/html5-qrcode"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body>
@@ -119,10 +120,23 @@
 		<div id="noteItems"></div>
 	</div>
 
+	<div id="qrGeneratorView" class="qr-container hidden">
+		<h2>QR-Code Generator</h2>
+		<p style="color: var(--text-muted); font-size: 0.9em; margin-top: -10px; margin-bottom: 20px;">
+			Erstelle einen QR-Code aus Sachnummern, Texten oder Links.
+		</p>
+		<div class="add-item-container">
+			<textarea id="qrGenerateInput" placeholder="Text, Sachnummer oder URL eingeben..."></textarea>
+			<button class="button" onclick="generateQRCode()">QR-Code erstellen</button>
+		</div>
+		<div id="qrcodeDisplay" class="qr-code-display"></div>
+	</div>
+
 	<div class="phone-list-buttons">
 		<button type="button" class="nav-button" id="navCalcButton" onclick="showView('calculator')">Stückzahl</button>
-		<button type="button" class="nav-button" id="navPhoneButton" onclick="showView('phoneList')">Telefonnummern</button>
+		<button type="button" class="nav-button" id="navPhoneButton" onclick="showView('phoneList')">Telefon</button>
 		<button type="button" class="nav-button" id="navNotesButton" onclick="showView('notes')">Notizen</button>
+		<button type="button" class="nav-button" id="navQRButton" onclick="showView('qrGenerator')">QR</button>
 	</div>
 
 	<div id="phoneNumberDialog" class="dialog-overlay" onclick="if(event.target === this) closeDialog()">
