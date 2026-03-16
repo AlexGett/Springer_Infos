@@ -302,14 +302,12 @@ function renderPhoneList(filter = '') {
 }
 
 function showView(view) {
-	// Erweitert für qrGeneratorView
 	const views = ['calculatorView', 'phoneListView', 'notesView', 'qrGeneratorView'];
 	views.forEach(id => {
 		const el = document.getElementById(id);
 		if (el) el.classList.add('hidden');
 	});
 
-	// Erweitert für navQRButton
 	const navButtons = ['navCalcButton', 'navPhoneButton', 'navNotesButton', 'navQRButton'];
 	navButtons.forEach(id => {
 		const el = document.getElementById(id);
@@ -465,13 +463,20 @@ function closeImageDialog() {
 }
 
 
-/* --- QR Scanner Logik --- */
+/* --- Angepasste QR Scanner Logik --- */
 let html5QrcodeScanner = null;
+let isFlashlightOn = false;
 
 function openScanner() {
     const dialog = document.getElementById('scannerDialog');
     dialog.classList.add('show');
     document.getElementById('scanner-status').textContent = "Kamera wird gestartet...";
+    
+    // Verstecke die Taschenlampe standardmäßig, bis wir sicher sind, dass das Gerät sie unterstützt
+    const torchBtn = document.getElementById('torchButton');
+    torchBtn.style.display = 'none';
+    torchBtn.innerText = "🔦 Taschenlampe An";
+    isFlashlightOn = false;
 
     if (html5QrcodeScanner) {
         html5QrcodeScanner.clear();
@@ -479,21 +484,49 @@ function openScanner() {
 
     html5QrcodeScanner = new Html5Qrcode("reader");
 
+    // WICHTIG: Rechteckige Scan-Box (300x120), ideal für lange VDA-Label und Barcodes (nicht quadratisch!).
+    // Bildrate auf 20 erhöht.
     const config = { 
-        fps: 10, 
-        qrbox: { width: 250, height: 250 },
+        fps: 20, 
+        qrbox: { width: 300, height: 120 }, 
         aspectRatio: 1.0 
     };
 
     html5QrcodeScanner.start(
-        { facingMode: "environment" },
+        // Fordere die höchste verfügbare Auflösung und Dauer-Autofokus der Rückkamera an
+        { facingMode: "environment", advanced: [{ focusMode: "continuous" }] },
         config,
         onScanSuccess,
         onScanFailure
-    ).catch((err) => {
-        document.getElementById('scanner-status').textContent = "Fehler beim Kamerazugriff. Evtl. keine Berechtigung?";
+    ).then(() => {
+        // Prüfen, ob die Kamera eine Taschenlampe hat und blende dann den Button ein
+        setTimeout(() => {
+            const track = html5QrcodeScanner.getRunningTrackCameraCapabilities();
+            if (track && track.torchFeature().isSupported()) {
+                torchBtn.style.display = 'block';
+            }
+        }, 500); // Kurz warten, bis der Videostream initialisiert ist
+    }).catch((err) => {
+        document.getElementById('scanner-status').textContent = "Fehler beim Kamerazugriff.";
         console.error("Camera error:", err);
     });
+}
+
+function toggleFlashlight() {
+    if (html5QrcodeScanner) {
+        isFlashlightOn = !isFlashlightOn;
+        const torchBtn = document.getElementById('torchButton');
+        
+        html5QrcodeScanner.applyVideoConstraints({
+            advanced: [{ torch: isFlashlightOn }]
+        }).then(() => {
+            torchBtn.innerText = isFlashlightOn ? "🔦 Taschenlampe Aus" : "🔦 Taschenlampe An";
+        }).catch(err => {
+            console.error("Taschenlampe konnte nicht aktiviert werden", err);
+            alert("Taschenlampe wird von diesem Gerät / Browser nicht unterstützt.");
+            isFlashlightOn = !isFlashlightOn; // Status zurücksetzen
+        });
+    }
 }
 
 function closeScanner() {
@@ -501,6 +534,9 @@ function closeScanner() {
     dialog.classList.remove('show');
     
     if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
+        // Taschenlampe sicherheitshalber ausschalten
+        if (isFlashlightOn) toggleFlashlight();
+
         html5QrcodeScanner.stop().then(() => {
             html5QrcodeScanner.clear();
         }).catch(err => {
@@ -527,7 +563,7 @@ function onScanFailure(error) {
 }
 
 
-/* --- NEU: QR Generator Logik --- */
+/* --- QR Generator Logik --- */
 function generateQRCode() {
     const text = document.getElementById('qrGenerateInput').value.trim();
     const qrDisplay = document.getElementById('qrcodeDisplay');
@@ -537,17 +573,15 @@ function generateQRCode() {
         return;
     }
 
-    // Leere den Container
     qrDisplay.innerHTML = "";
     qrDisplay.classList.add('show');
 
-    // Generiere den neuen Code (qrcode.min.js)
     new QRCode(qrDisplay, {
         text: text,
         width: 200,
         height: 200,
         colorDark : "#000000",
-        colorLight : "#ffffff", // Wichtig, damit er von Scannern auf dunklen Displays erkannt wird
+        colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H
     });
 }
