@@ -1,4 +1,4 @@
-const CACHE_NAME = 'behälter-rechner-v1.1.18'; // Cache Version aktualisiert
+const CACHE_NAME = 'behälter-rechner-v1.1.19'; // Version für den Scanner erhöht
 const urlsToCache = [
 	'./',
 	'./index.html',
@@ -18,7 +18,6 @@ const urlsToCache = [
 	'./logo.PNG'
 ];
 
-// Install Event: Cache statische Assets
 self.addEventListener('install', event => {
 	event.waitUntil(
 		caches.open(CACHE_NAME)
@@ -29,24 +28,21 @@ self.addEventListener('install', event => {
 	);
 });
 
-// Fetch Event: Assets aus dem Cache abrufen, falls vorhanden, sonst Netzwerk
 self.addEventListener('fetch', event => {
 	event.respondWith(
 		caches.match(event.request)
 		.then(response => {
-			// Cache Hit - returniere die Antwort
 			if (response) {
 				return response;
 			}
-			// Kein Cache Hit - rufe vom Netzwerk ab
 			return fetch(event.request).then(
 				response => {
-					// Überprüfe, ob wir eine gültige Antwort erhalten haben
+					// Wir cachen nur lokale Dateien und gültige Antworten (Status 200).
+                    // Externe CDN-Aufrufe wie unpkg.com für den QR-Code werden normal durchgereicht.
 					if (!response || response.status !== 200 || response.type !== 'basic') {
 						return response;
 					}
 
-					// Wenn die Antwort gültig ist, klone sie und speichere sie im Cache
 					const responseToCache = response.clone();
 					caches.open(CACHE_NAME)
 						.then(cache => {
@@ -60,7 +56,6 @@ self.addEventListener('fetch', event => {
 	);
 });
 
-// Activate Event: Alte Caches löschen
 self.addEventListener('activate', event => {
 	const cacheWhitelist = [CACHE_NAME];
 	event.waitUntil(
