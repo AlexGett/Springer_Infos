@@ -1,134 +1,16 @@
-const phoneNumbers = [
-	{ name: "Abnahme Flex Line eQ", number: "5596" },
-	{ name: "Achtnicht Daniel", number: "4576" },
-	{ name: "Anthofer Maximilian", number: "5410" },
-	{ name: "Aufnahme Flex Line eQ", number: "5595" },
-	{ name: "AZUBI Magazin", number: "4448" },
-	{ name: "Azubi I-Tafel", number: "4747" },
-	{ name: "Balaba Alexander S1", number: "4051" },
-	{ name: "Behrendt Sebastian", number: "4717" },
-	{ name: "Bereich Spritzerei", number: "4713" },
-	{ name: "Bereiche KL1 bis KL5", number: "4977" },
-	{ name: "Bereiche KL1 bis KL5", number: "4978" },
-	{ name: "Binkowski Rainer", number: "4624" },
-	{ name: "Böhm Konrad", number: "4901" },
-	{ name: "Bool Waldemar S3", number: "4056" },
-	{ name: "Brandl Dieter", number: "4811" },
-	{ name: "Brunner Arthur", number: "4073" },
-	{ name: "Budarin Alex", number: "5125" },
-	{ name: "Chumakov Sergej", number: "4380" },
-	{ name: "Dechant Christian", number: "5419" },
-	{ name: "Dürmeier Bernhard", number: "4832" },
-	{ name: "Elektriker U10 / Frimo 1", number: "4715" },
-	{ name: "Elektriker U1x", number: "4793" },
-	{ name: "Euringer Kurt", number: "4716" },
-	{ name: "Felder Sergej", number: "4053" },
-	{ name: "Feuerwehr Schichtleiter", number: "5426" },
-	{ name: "Fischer David S2", number: "4858" },
-	{ name: "Forstner Florian", number: "4800" },
-	{ name: "Forstner Sigi", number: "4923" },
-	{ name: "Fritsch Markus", number: "4922" },
-	{ name: "Früchtl Jörg", number: "4907" },
-	{ name: "Fuchs Siglinde", number: "4667" },
-	{ name: "Gallmaier Alfons", number: "4505" },
-	{ name: "Gammel - Roith.", number: "4310" },
-	{ name: "Gonda Slawomir S3", number: "4568" },
-	{ name: "Greb Johann", number: "4017" },
-	{ name: "Grünert Stefan", number: "4912" },
-	{ name: "Hecker Florian", number: "4010" },
-	{ name: "Hegner Markus", number: "4697" },
-	{ name: "Hermann Gerhard", number: "4335" },
-	{ name: "Herzo Karl S2", number: "5241" },
-	{ name: "Hilz Albert", number: "4975" },
-	{ name: "Höfer Michael", number: "4077" },
-	{ name: "Hofmann Sven", number: "4260" },
-	{ name: "Hohenester Peter S1", number: "4597" },
-	{ name: "Hopf Rainer", number: "4257" },
-	{ name: "Hoyer Manfred", number: "4940" },
-	{ name: "Huber Albert", number: "4908" },
-	{ name: "Huber Markus", "number": "4678" },
-	{ name: "Hüttner Stefan", number: "5135" },
-	{ name: "IT AZUBI", number: "4747" },
-	{ name: "Jakolev Andreas S2", number: "5563" },
-	{ name: "JIT Springer", number: "4602" },
-	{ name: "Kaufteillager", number: "4288" },
-	{ name: "Kilich Furkan", number: "5253" },
-	{ name: "KL 1+2 Folie Springer", number: "4295" },
-	{ name: "KL 1+2 Kontrolle Bühne", number: "4275" },
-	{ name: "Koller Thomas", number: "4910" },
-	{ name: "Kramschuster Anton", number: "4643" },
-	{ name: "Krojer Anton", number: "4738" },
-	{ name: "Krzoska Klaus", number: "4527" },
-	{ name: "Kügel Richard", number: "4339" },
-	{ name: "Leitstand L1", number: "4618" },
-	{ name: "Leyk Michael", number: "4869" },
-	{ name: "Liedl Jürgen", number: "4797" },
-	{ name: "Limmer Markus", number: "4740" },
-	{ name: "Malkow Vitali", number: "5103" },
-	{ name: "Mayer Johannes", number: "4434" },
-	{ name: "Meier Wolfgang", number: "4707" },
-	{ name: "Michel Andreas S1", number: "4001" },
-	{ name: "Mies Markus S1", number: "4099" },
-	{ name: "Mittermeier", number: "5438" },
-	{ name: "Müller Alfons", number: "4914" },
-	{ name: "Obermeier Simon", number: "4860" },
-	{ name: "Olber Erik", number: "4093" },
-	{ name: "Pforte", number: "4260" },
-	{ name: "Reger Dominic", number: "5086" },
-	{ name: "Rottmeier Robert", number: "4390" },
-	{ name: "Rösel Sandra", number: "4578" },
-	{ name: "Rußwurm Hemut", number: "4874" },
-	{ name: "Rußwurm Roland S2", number: "5530" },
-	{ name: "Rusch Maria", number: "4813" },
-	{ name: "Schierlinger Daniel", number: "4459" },
-	{ name: "Schierlinger Sebastian", number: "4422" },
-	{ name: "Schlosser Werkstatt", number: "4783" },
-	{ name: "Schlosser Werkstatt", number: "4784" },
-	{ name: "Schmid Dominik S2", number: "4482" },
-	{ name: "Schroedl Michael", number: "4878" },
-	{ name: "Schulz Stefan", number: "5077" },
-	{ name: "Schwaiger Franz", number: "4020" },
-	{ name: "Sedlmeier Dominik", number: "4905" },
-	{ name: "Sieckmann Walter", number: "4644" },
-	{ name: "Simmerl Klaus", number: "4768" },
-	{ name: "Singer Alexander", number: "4709" },
-	{ name: "Springer AAL Schäumen", number: "4000" },
-	{ name: "Springer F39", number: "4065" },
-	{ name: "Springer I-Tafel Montage", number: "4935" },
-	{ name: "Springer I-Tafel Schäumen", number: "4494" },
-	{ name: "Springer I-Tafel Slush neu", number: "4939" },
-	{ name: "Springer Frimo 4", number: "5122" },
-	{ name: "Springer Kiefel", number: "5216" },
-	{ name: "Springer Q6", number: "4064" },
-	{ name: "Springer U10_1", number: "4601" },
-	{ name: "Springer U10_2", number: "4602" },
-	{ name: "Springer U1x Endmontage", number: "5586" },
-	{ name: "Springer U1x Vormontage", number: "5583" },
-	{ name: "Tereschenko Alex", number: "5560" },
-	{ name: "Todt Herbert", number: "5335" },
-	{ name: "Trübswetter Stefan", number: "4906" },
-	{ name: "Umschüler", number: "4076" },
-	{ name: "Vogt Franz", number: "4611" },
-	{ name: "Vorarbeiter BMW U1X", number: "5562" },
-	{ name: "Vorarbeiter I-Tafel", number: "4700" },
-	{ name: "Vorarbeiter MAN + L 4+5", number: "5121" },
-	{ name: "Vorarbeiter Q6", number: "4830" },
-	{ name: "Vorarbeiter U10", number: "4508" },
-	{ name: "Vorarbeiter U1x", number: "4098" },
-	{ name: "Weber Antje", number: "4131" },
-	{ name: "Weininger Franz", number: "4890" },
-	{ name: "Werksärztin Dr. Pietsch", number: "4250" },
-	{ name: "Werkzeugbau", number: "4777" },
-	{ name: "Werkzeugbau", number: "4888" },
-	{ name: "Winkler Theresa", number: "4266" },
-	{ name: "Ziegler Michael S3", number: "4735" },
-	{ name: "Zinner Michael", number: "5183" },
-	{ name: "Zola Nico", number: "6560" }
-].sort((a, b) => a.name.localeCompare(b.name));
+let phoneNumbers = [];
 
-const DIAL_PREFIX = "0840277";
+async function fetchPhoneNumbers() {
+	try {
+		const response = await fetch('phoneNumbers.json');
+		const data = await response.json();
+		phoneNumbers = data.sort((a, b) => a.name.localeCompare(b.name));
+		console.log("Telefonnummern geladen.");
+	} catch (error) {
+		console.error("Fehler beim Laden der Telefonnummern:", error);
+	}
+}
 
-let currentFullPhoneNumber = '';
 let noteItems = JSON.parse(localStorage.getItem('noteItems')) || [];
 
 const CALCULATOR_INPUT_IDS = [
@@ -235,6 +117,20 @@ function berechneNacharbeitProzent() {
 	let gesamtanzahl = parseInt(document.getElementById('gesamtanzahl').textContent) || 0;
 	let nacharbeitProzent = gesamtanzahl > 0 ? (nacharbeit * 100 / gesamtanzahl).toFixed(2) : 0;
 	document.getElementById('nacharbeitProzent').textContent = nacharbeitProzent + '%';
+}
+
+function shareResults() {
+    const front = document.getElementById('ergebnis').textContent;
+    const heck = document.getElementById('ergebnis2').textContent;
+    const gesamt = document.getElementById('gesamtanzahl').textContent;
+    const text = `Behälter-Kalkulation:\nFront: ${front}\nHeck: ${heck}\nGesamtanzahl: ${gesamt}`;
+
+    if (navigator.share) {
+        navigator.share({ title: 'Kalkulationsergebnis', text: text }).catch(console.error);
+    } else {
+        navigator.clipboard.writeText(text);
+        alert('Ergebnisse in die Zwischenablage kopiert!');
+    }
 }
 
 function toggleColors() {
@@ -392,6 +288,7 @@ function addNoteItem() {
 	const newItem = {
 		id: Date.now(),
 		text: text,
+		timestamp: new Date().toLocaleString('de-DE'),
 		photo: null
 	};
 
@@ -432,14 +329,28 @@ function renderNotes() {
 		const formattedText = item.text.replace(/\n/g, '<br>');
 		
 		div.innerHTML = `
-            <span>${formattedText}</span>
+            <div class="note-content">
+                <small>${item.timestamp || ''}</small><br>
+                <span>${formattedText}</span>
+            </div>
             <div class="item-actions">
                 ${item.photo ? `<button class="view-photo" onclick="openImageDialog('${item.photo}')">Foto ansehen</button>` : ''}
+                <button onclick="editNoteItem(${item.id})">Ändern</button>
                 <button onclick="deleteNoteItem(${item.id})">Löschen</button>
             </div>
         `;
 		notesDiv.appendChild(div);
 	});
+}
+
+function editNoteItem(id) {
+    const item = noteItems.find(i => i.id === id);
+    const newText = prompt('Notiz bearbeiten:', item.text);
+    if (newText !== null) {
+        item.text = newText;
+        saveNotes();
+        renderNotes();
+    }
 }
 
 function deleteNoteItem(id) {
@@ -482,19 +393,32 @@ function openScanner() {
         html5QrcodeScanner.clear();
     }
 
-    html5QrcodeScanner = new Html5Qrcode("reader");
+    // Nutze native Barcode Detector API falls verfügbar (Hardware-Beschleunigung)
+    html5QrcodeScanner = new Html5Qrcode("reader", { 
+        experimentalFeatures: {
+            useBarCodeDetectorIfSupported: true 
+        }
+    });
 
-    // WICHTIG: Rechteckige Scan-Box (300x120), ideal für lange VDA-Label und Barcodes (nicht quadratisch!).
-    // Bildrate auf 20 erhöht.
+    // Dynamische Berechnung der Scan-Box für bessere Erkennung
     const config = { 
-        fps: 20, 
-        qrbox: { width: 300, height: 120 }, 
+        fps: 25, 
+        qrbox: (viewfinderWidth, viewfinderHeight) => {
+            // Breite Box für Barcodes, nutzt 80% der Displaybreite
+            const width = viewfinderWidth * 0.8;
+            const height = 140; 
+            return { width: width, height: height };
+        },
         aspectRatio: 1.0 
     };
 
     html5QrcodeScanner.start(
-        // Fordere die Rückkamera an (Fehlerbehebung: advanced-Objekt entfernt)
-        { facingMode: "environment" },
+        { 
+            facingMode: "environment",
+            // Höhere Auflösung ist entscheidend für feine Barcodes
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+        },
         config,
         onScanSuccess,
         onScanFailure
@@ -588,6 +512,7 @@ function generateQRCode() {
 
 // Event Listener
 window.onload = () => {
+	fetchPhoneNumbers();
 	loadInputs();
 	document.getElementById('backgroundColorPicker').addEventListener('input', handleColorChange);
 	document.getElementById('phoneSearch').addEventListener('input', (e) => renderPhoneList(e.target.value));

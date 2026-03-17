@@ -1,9 +1,10 @@
-const CACHE_NAME = 'behälter-rechner-v1.1.23';
+const CACHE_NAME = 'behälter-rechner-v1.1.28';
 const urlsToCache = [
 	'./',
 	'./index.html',
 	'./style.css',
 	'./script.js',
+	'./phoneNumbers.json',
 	'./manifest.json',
 	'./ios/16.png',
 	'./ios/32.png',
