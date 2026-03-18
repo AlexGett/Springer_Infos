@@ -404,18 +404,24 @@ async function openScanner() {
     }
 
     const config = { 
-        fps: 20, 
+        fps: 30, // Höhere FPS für schnellere Erkennung
         qrbox: (viewfinderWidth, viewfinderHeight) => {
-            const width = viewfinderWidth * 0.8;
-            const height = 150; 
-            return { width: width, height: height };
-        }
+            // Dynamischerer Scan-Bereich verbessert die Trefferquote
+            const width = Math.floor(viewfinderWidth * 0.85);
+            const height = Math.floor(viewfinderHeight * 0.35);
+            return { width: width, height: Math.max(height, 200) };
+        },
+        aspectRatio: 1.0,
+        disableFlip: true // Spart Ressourcen bei der Rückkamera
     };
 
     try {
-        // Wir verzichten auf feste Breiten/Höhen (ideal), um Kompatibilität zu erhöhen
         await html5QrcodeScanner.start(
-            { facingMode: "environment" },
+            { 
+                facingMode: "environment",
+                width: { ideal: 1280 }, // Höhere Auflösung für schärfere Barcodes
+                height: { ideal: 720 }
+            },
             config,
             onScanSuccess,
             onScanFailure
