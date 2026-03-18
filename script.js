@@ -412,16 +412,16 @@ async function openScanner() {
             return { width: width, height: Math.max(height, 200) };
         },
         aspectRatio: 1.0,
-        disableFlip: true // Spart Ressourcen bei der Rückkamera
+        disableFlip: true, // Spart Ressourcen bei der Rückkamera
+        videoConstraints: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+        }
     };
 
     try {
         await html5QrcodeScanner.start(
-            { 
-                facingMode: "environment",
-                width: { ideal: 1280 }, // Höhere Auflösung für schärfere Barcodes
-                height: { ideal: 720 }
-            },
+            { facingMode: "environment" },
             config,
             onScanSuccess,
             onScanFailure
