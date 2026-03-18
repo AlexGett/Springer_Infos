@@ -399,19 +399,26 @@ async function openScanner() {
 
     if (!html5QrcodeScanner) {
         html5QrcodeScanner = new Html5Qrcode("reader", { 
-            experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+            experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+            formatsToSupport: [ 
+                Html5QrcodeSupportedFormats.QR_CODE, 
+                Html5QrcodeSupportedFormats.CODE_128, 
+                Html5QrcodeSupportedFormats.CODE_39, 
+                Html5QrcodeSupportedFormats.EAN_13, 
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.DATAMATRIX
+            ]
         });
     }
 
     const config = { 
-        fps: 30, // Höhere FPS für schnellere Erkennung
+        fps: 20, // 20 FPS ist oft stabiler für die mobile CPU-Leistung
         qrbox: (viewfinderWidth, viewfinderHeight) => {
             // Dynamischerer Scan-Bereich verbessert die Trefferquote
             const width = Math.floor(viewfinderWidth * 0.85);
             const height = Math.floor(viewfinderHeight * 0.35);
             return { width: width, height: Math.max(height, 200) };
         },
-        aspectRatio: 1.0,
         disableFlip: true, // Spart Ressourcen bei der Rückkamera
         videoConstraints: {
             facingMode: "environment",
