@@ -380,7 +380,18 @@ let isFlashlightOn = false;
 
 async function openScanner() {
     const dialog = document.getElementById('scannerDialog');
+    const readerElement = document.getElementById('reader');
+    
+    // Dialog anzeigen
     dialog.classList.add('show');
+    
+    // Wichtig: Den Container leeren, falls noch alte Video-Elemente vom letzten Scan existieren
+    readerElement.innerHTML = '';
+
+    // Kleiner Delay (300ms), damit die CSS-Animation (.dialog-overlay.show) fertig ist.
+    // Ohne diesen Delay berechnet der Scanner die qrbox auf Basis falscher Container-Maße.
+    await new Promise(resolve => setTimeout(resolve, 300));
+
     const statusText = document.getElementById('scanner-status');
     statusText.textContent = "Kamera wird gestartet...";
     
