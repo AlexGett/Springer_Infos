@@ -414,6 +414,7 @@ async function openScanner() {
         aspectRatio: 1.0,
         disableFlip: true, // Spart Ressourcen bei der Rückkamera
         videoConstraints: {
+            facingMode: "environment",
             width: { ideal: 1280 },
             height: { ideal: 720 }
         }

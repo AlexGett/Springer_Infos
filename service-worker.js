@@ -1,4 +1,4 @@
-const CACHE_NAME = 'behälter-rechner-v1.1.34';
+const CACHE_NAME = 'behälter-rechner-v1.1.35';
 const urlsToCache = [
 	'./',
 	'./index.html',
