@@ -378,94 +378,97 @@ function closeImageDialog() {
 let html5QrcodeScanner = null;
 let isFlashlightOn = false;
 
-function openScanner() {
+async function openScanner() {
     const dialog = document.getElementById('scannerDialog');
     dialog.classList.add('show');
-    document.getElementById('scanner-status').textContent = "Kamera wird gestartet...";
+    const statusText = document.getElementById('scanner-status');
+    statusText.textContent = "Kamera wird gestartet...";
     
-    // Verstecke die Taschenlampe standardmäßig, bis wir sicher sind, dass das Gerät sie unterstützt
     const torchBtn = document.getElementById('torchButton');
     torchBtn.style.display = 'none';
     torchBtn.innerText = "🔦 Taschenlampe An";
     isFlashlightOn = false;
 
-    if (html5QrcodeScanner) {
-        html5QrcodeScanner.clear();
+    if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
+        try {
+            await html5QrcodeScanner.stop();
+        } catch (e) {
+            console.warn("Scanner konnte nicht gestoppt werden", e);
+        }
     }
 
-    // Nutze native Barcode Detector API falls verfügbar (Hardware-Beschleunigung)
-    html5QrcodeScanner = new Html5Qrcode("reader", { 
-        experimentalFeatures: {
-            useBarCodeDetectorIfSupported: true 
-        }
-    });
-
-    // Dynamische Berechnung der Scan-Box für bessere Erkennung
-    const config = { 
-        fps: 25, 
-        qrbox: (viewfinderWidth, viewfinderHeight) => {
-            // Breite Box für Barcodes, nutzt 80% der Displaybreite
-            const width = viewfinderWidth * 0.8;
-            const height = 140; 
-            return { width: width, height: height };
-        },
-        aspectRatio: 1.0 
-    };
-
-    html5QrcodeScanner.start(
-        { 
-            facingMode: "environment",
-            // Höhere Auflösung ist entscheidend für feine Barcodes
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
-        },
-        config,
-        onScanSuccess,
-        onScanFailure
-    ).then(() => {
-        // Prüfen, ob die Kamera eine Taschenlampe hat und blende dann den Button ein
-        setTimeout(() => {
-            const track = html5QrcodeScanner.getRunningTrackCameraCapabilities();
-            if (track && track.torchFeature().isSupported()) {
-                torchBtn.style.display = 'block';
-            }
-        }, 500); // Kurz warten, bis der Videostream initialisiert ist
-    }).catch((err) => {
-        document.getElementById('scanner-status').textContent = "Fehler beim Kamerazugriff.";
-        console.error("Camera error:", err);
-    });
-}
-
-function toggleFlashlight() {
-    if (html5QrcodeScanner) {
-        isFlashlightOn = !isFlashlightOn;
-        const torchBtn = document.getElementById('torchButton');
-        
-        html5QrcodeScanner.applyVideoConstraints({
-            advanced: [{ torch: isFlashlightOn }]
-        }).then(() => {
-            torchBtn.innerText = isFlashlightOn ? "🔦 Taschenlampe Aus" : "🔦 Taschenlampe An";
-        }).catch(err => {
-            console.error("Taschenlampe konnte nicht aktiviert werden", err);
-            alert("Taschenlampe wird von diesem Gerät / Browser nicht unterstützt.");
-            isFlashlightOn = !isFlashlightOn; // Status zurücksetzen
+    if (!html5QrcodeScanner) {
+        html5QrcodeScanner = new Html5Qrcode("reader", { 
+            experimentalFeatures: { useBarCodeDetectorIfSupported: true }
         });
     }
+
+    const config = { 
+        fps: 20, 
+        qrbox: (viewfinderWidth, viewfinderHeight) => {
+            const width = viewfinderWidth * 0.8;
+            const height = 150; 
+            return { width: width, height: height };
+        }
+    };
+
+    try {
+        // Wir verzichten auf feste Breiten/Höhen (ideal), um Kompatibilität zu erhöhen
+        await html5QrcodeScanner.start(
+            { facingMode: "environment" },
+            config,
+            onScanSuccess,
+            onScanFailure
+        );
+        
+        statusText.textContent = "Scanner bereit";
+        
+        try {
+            const capabilities = html5QrcodeScanner.getRunningTrackCapabilities();
+            if (capabilities.torch) {
+                torchBtn.style.display = 'block';
+            }
+        } catch (e) {
+            console.log("Taschenlampen-Check fehlgeschlagen", e);
+        }
+    } catch (err) {
+        if (err.name === 'NotAllowedError' || err.toString().includes("NotAllowedError")) {
+            statusText.textContent = "Zugriff verweigert: Bitte Kamera in den Browser-Einstellungen erlauben.";
+        } else if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+            statusText.textContent = "Sicherheitsfehler: HTTPS wird für die Kamera benötigt.";
+        } else {
+            statusText.textContent = "Kamerafehler: " + err;
+        }
+        console.error("Camera start error:", err);
+    }
 }
 
-function closeScanner() {
+async function toggleFlashlight() {
+    if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
+        isFlashlightOn = !isFlashlightOn;
+        const torchBtn = document.getElementById('torchButton');
+        try {
+            await html5QrcodeScanner.applyVideoConstraints({
+                advanced: [{ torch: isFlashlightOn }]
+            });
+            torchBtn.innerText = isFlashlightOn ? "🔦 Taschenlampe Aus" : "🔦 Taschenlampe An";
+        } catch (err) {
+            console.error("Torch error", err);
+            isFlashlightOn = !isFlashlightOn;
+        }
+    }
+}
+
+async function closeScanner() {
     const dialog = document.getElementById('scannerDialog');
     dialog.classList.remove('show');
     
     if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
-        // Taschenlampe sicherheitshalber ausschalten
-        if (isFlashlightOn) toggleFlashlight();
-
-        html5QrcodeScanner.stop().then(() => {
-            html5QrcodeScanner.clear();
-        }).catch(err => {
+        try {
+            await html5QrcodeScanner.stop();
+        } catch (err) {
             console.error("Fehler beim Stoppen des Scanners", err);
-        });
+        }
     }
 }
 
@@ -479,7 +482,7 @@ function onScanSuccess(decodedText, decodedResult) {
     }
     
     closeScanner();
-    document.getElementById('navNotesButton').classList.add('active-nav');
+    showView('notes'); // Direkt zur Notiz-Ansicht wechseln
 }
 
 function onScanFailure(error) {
@@ -517,4 +520,19 @@ window.onload = () => {
 	document.getElementById('backgroundColorPicker').addEventListener('input', handleColorChange);
 	document.getElementById('phoneSearch').addEventListener('input', (e) => renderPhoneList(e.target.value));
 	document.getElementById('toggleAllContactsHeading').addEventListener('click', toggleAllContacts);
+
+	// Footer Informationen initialisieren
+	const yearSpan = document.getElementById('copyrightYear');
+	if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+	// Dynamisches Auslesen der Version aus der service-worker.js (CACHE_NAME)
+	fetch('service-worker.js')
+		.then(response => response.text())
+		.then(text => {
+			const match = text.match(/CACHE_NAME\s*=\s*['"](.+?)['"]/);
+			if (match && match[1]) {
+				// Extrahiert den Teil nach dem letzten Bindestrich (z.B. 'v1.1.1')
+				document.getElementById('appVersion').textContent = match[1].split('-').pop();
+			}
+		}).catch(err => console.error("Versionsstand konnte nicht geladen werden:", err));
 };
