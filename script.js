@@ -385,13 +385,25 @@ async function openScanner() {
     }
 
     const dialog = document.getElementById('scannerDialog');
-    const readerElement = document.getElementById('reader');
+    const dialogContent = dialog.querySelector('.dialog-content'); // Den Eltern-Container des Readers finden
     
     // Dialog anzeigen
     dialog.classList.add('show');
     
-    // Wichtig: Den Container leeren, falls noch alte Video-Elemente vom letzten Scan existieren
-    readerElement.innerHTML = '';
+    // Wichtig: Den alten reader-Container entfernen und einen neuen erstellen.
+    // Dies stellt sicher, dass alle vorherigen DOM-Elemente und Event-Listener des Scanners entfernt werden
+    // und der Scanner immer mit einem frischen Element initialisiert wird.
+    let oldReaderElement = document.getElementById('reader');
+    if (oldReaderElement) {
+        oldReaderElement.remove();
+    }
+    const newReaderElement = document.createElement('div');
+    newReaderElement.id = 'reader';
+    newReaderElement.style.width = '100%';
+    newReaderElement.style.minHeight = '200px'; // Sicherstellen, dass es eine initiale Höhe hat
+    // Den neuen Reader vor dem Taschenlampen-Button einfügen
+    const torchButton = document.getElementById('torchButton');
+    dialogContent.insertBefore(newReaderElement, torchButton);
 
     // Kleiner Delay (300ms), damit die CSS-Animation (.dialog-overlay.show) fertig ist.
     // Ohne diesen Delay berechnet der Scanner die qrbox auf Basis falscher Container-Maße.
