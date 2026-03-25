@@ -405,27 +405,28 @@ async function openScanner() {
     torchBtn.innerText = "🔦 Taschenlampe An";
     isFlashlightOn = false;
 
+    // Stop any existing scanner instance before creating a new one
     if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
         try {
             await html5QrcodeScanner.stop();
         } catch (e) {
-            console.warn("Scanner konnte nicht gestoppt werden", e);
+            console.warn("Scanner konnte nicht gestoppt werden vor Neuanlage", e);
         }
+        html5QrcodeScanner = null; // Clear the instance
     }
 
-    if (!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5Qrcode("reader", { 
-            experimentalFeatures: { useBarCodeDetectorIfSupported: true },
-            formatsToSupport: [ 
-                Html5QrcodeSupportedFormats.QR_CODE, 
-                Html5QrcodeSupportedFormats.CODE_128, 
-                Html5QrcodeSupportedFormats.CODE_39, 
-                Html5QrcodeSupportedFormats.EAN_13, 
-                Html5QrcodeSupportedFormats.EAN_8,
-                Html5QrcodeSupportedFormats.DATAMATRIX
-            ]
-        });
-    }
+    // Always create a new instance for robustness
+    html5QrcodeScanner = new Html5Qrcode("reader", { 
+        experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+        formatsToSupport: [ 
+            Html5QrcodeSupportedFormats.QR_CODE, 
+            Html5QrcodeSupportedFormats.CODE_128, 
+            Html5QrcodeSupportedFormats.CODE_39, 
+            Html5QrcodeSupportedFormats.EAN_13, 
+            Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.DATAMATRIX
+        ]
+    });
 
     const config = { 
         fps: 20, // 20 FPS ist oft stabiler für die mobile CPU-Leistung
@@ -498,6 +499,8 @@ async function closeScanner() {
             await html5QrcodeScanner.stop();
         } catch (err) {
             console.error("Fehler beim Stoppen des Scanners", err);
+        } finally {
+            html5QrcodeScanner = null; // Nullify the instance to ensure fresh creation next time
         }
     }
 }
