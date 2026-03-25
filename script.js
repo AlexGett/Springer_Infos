@@ -379,6 +379,11 @@ let html5QrcodeScanner = null;
 let isFlashlightOn = false;
 
 async function openScanner() {
+    if (!confirm("Möchten Sie die Kamera für den QR-Scanner öffnen?")) {
+        closeScanner(); // Schließt den Dialog, falls er schon offen ist oder verhindert das Öffnen
+        return;
+    }
+
     const dialog = document.getElementById('scannerDialog');
     const readerElement = document.getElementById('reader');
     
