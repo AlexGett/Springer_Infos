@@ -558,6 +558,39 @@ function generateQRCode() {
     });
 }
 
+// Zeige ein Bild mit dem Namen "Dürkopp" (mehrere Endungen werden probiert)
+function showDurkoppImage() {
+	const baseNames = ['Dürkopp', 'Duerkopp', 'Duerkopp'];
+	const extensions = ['.png', '.jpg', '.jpeg', '.webp'];
+
+	let tried = 0;
+	let found = false;
+
+	function tryNextName() {
+		if (tried >= baseNames.length * extensions.length) {
+			if (!found) alert('Bild "Dürkopp" nicht gefunden. Bitte Datei im Projektordner hinzufügen.');
+			return;
+		}
+
+		const nameIndex = Math.floor(tried / extensions.length);
+		const extIndex = tried % extensions.length;
+		const candidate = baseNames[nameIndex] + extensions[extIndex];
+		tried++;
+
+		const img = new Image();
+		img.onload = function() {
+			found = true;
+			openImageDialog(candidate);
+		};
+		img.onerror = function() {
+			// wenn fehler, nächsten versuchen
+			tryNextName();
+		};
+		img.src = candidate;
+	}
+
+	tryNextName();
+}
 // Event Listener
 window.onload = () => {
 	fetchPhoneNumbers();
@@ -580,4 +613,23 @@ window.onload = () => {
 				document.getElementById('appVersion').textContent = match[1].split('-').pop();
 			}
 		}).catch(err => console.error("Versionsstand konnte nicht geladen werden:", err));
+
+	// QR-Generator: Button zum Anzeigen des Bildes "Dürkopp" dynamisch hinzufügen
+	try {
+		const qrContainer = document.getElementById('qrGeneratorView');
+		if (qrContainer) {
+			const addItem = qrContainer.querySelector('.add-item-container');
+			if (addItem) {
+				const btn = document.createElement('button');
+				btn.type = 'button';
+				btn.className = 'button';
+				btn.id = 'openDurkoppButton';
+				btn.textContent = 'Bild "Dürkopp" ansehen';
+				btn.addEventListener('click', showDurkoppImage);
+				addItem.appendChild(btn);
+			}
+		}
+	} catch (e) {
+		console.error('Fehler beim Hinzufügen des Dürkopp-Buttons:', e);
+	}
 };
