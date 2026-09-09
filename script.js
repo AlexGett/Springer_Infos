@@ -624,7 +624,7 @@ window.onload = () => {
 				btn.type = 'button';
 				btn.className = 'button';
 				btn.id = 'openDurkoppButton';
-				btn.textContent = 'Bild "Dürkopp" ansehen';
+				btn.textContent = 'QR-Code "Dürkopp" öffnen';
 				btn.addEventListener('click', showDurkoppImage);
 				addItem.appendChild(btn);
 			}
